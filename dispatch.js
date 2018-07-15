@@ -1,8 +1,20 @@
 'use strict';
 
+/*
+ * dispatch.js - To distinguish intents
+ *
+ * Incheon Airport AI Secretary based on AWS Lex
+ *
+ * Created by Nablekim94@gmail.com 2018-07-15
+*/
+
+const arrivalAll = require('./arrivalAll');
+
 module.exports = function(intentRequest, callback) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
   const intentName = intentRequest.currentIntent.name;
+
+  console.log(intentName+' was called!');
 
   // Run the appropriate logic depending on intentName value
   if(intentName === 'AirlineInfo') {
@@ -10,6 +22,7 @@ module.exports = function(intentRequest, callback) {
   }
   else if(intentName === 'ArrivalAll') {
     // Implement this logic
+    return arrivalAll(intentRequest);
   }
   else if(intentName === 'ArrivalLocation') {
     // Implement this logic

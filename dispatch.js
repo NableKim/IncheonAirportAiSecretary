@@ -38,6 +38,7 @@ module.exports = function(intentRequest, callback) {
   }
   else if(intentName === 'DepartureAll') {
     // Implement this logic
+    return departureAll(intentRequest);
   }
   else if(intentName === 'DepartureLocation') {
     // Implement this logic

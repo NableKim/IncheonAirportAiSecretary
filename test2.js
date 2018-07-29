@@ -9,7 +9,8 @@ var api_config = require('./config/openAPIkey.json');
 
 var url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerDeparturesDS';
 var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
-queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent('SEA'); /* 파라미터설명 */
+//queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent(''); /* 파라미터설명 */
+queryParams += '&' + encodeURIComponent('terminalid') + '=' + encodeURIComponent('P01'); /* 파라미터설명 */
 
 // 도착편
 // var url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerArrivalsDS';

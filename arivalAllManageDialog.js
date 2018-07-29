@@ -25,4 +25,4 @@ module.exports = function(intentRequest, callback) {
         // 사용자로부터 출발지, 항공사, 도착일자를 입력받음
         // 출발지, 항공사, 도착일자를 가지고 사용자가 찾는 항공편만 고르기
         // 항공편 한개가 골라질 때까지 사용자에게 질문 - ElicitSlot으로 추가 정보를 획득할 수도 있음
-}
+};

@@ -17,4 +17,4 @@ module.exports = function(intentRequest, callback) {
   // 입력받은 목적지, 항공사, 출발일자를 가지고 원하는 항공편만 골라내기
   // 찾은 비행편을 사용자의 최신 항공편으로 등록 - Myflight DB에 추가
   // fulfillment response 만들어서 반환
-}
+};

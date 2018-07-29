@@ -11,13 +11,16 @@
 const handleDialogCodeHook = require('./departureAllManageDialog');
 const handleFulfillmentCodeHook = require('./departureAllManageFulfillment');
 
-module.exports = function(intentRequest, callback) {
+module.exports = function(intentRequest) {
+  console.log("Entered departureAll...");
+
   const source = intentRequest.invocationSource;
 
   if(source === 'DialogCodeHook') {
-    return handleDialogCodeHook();
+    console.log("Running departureAll's DialogCodeHook...");
+    return handleDialogCodeHook(intentRequest);
   }
-  else if(source === 'FulfillmnetCodeHook') {
-    return handleFulfillmentCodeHook();
+  else if(source === 'FulfillmentCodeHook') {
+    return handleFulfillmentCodeHook(intentRequest);
   }
-}
+};

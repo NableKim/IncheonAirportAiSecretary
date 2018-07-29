@@ -8,13 +8,14 @@
  * Created by Nablekim94@gmail.com 2018-07-15
 */
 
-const arrivalAll = require('./arrivalAll');
+const departureAll = require('./departureAll');
+//const arrivalAll = require('./arrivalAll');
 
-module.exports = function(intentRequest, callback) {
+module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
   const intentName = intentRequest.currentIntent.name;
 
-  console.log(intentName+' was called!');
+  console.log(intentName+' was called!sss');
 
   // Run the appropriate logic depending on intentName value
   if(intentName === 'AirlineInfo') {
@@ -22,7 +23,7 @@ module.exports = function(intentRequest, callback) {
   }
   else if(intentName === 'ArrivalAll') {
     // Implement this logic
-    return arrivalAll(intentRequest);
+    //return arrivalAll(intentRequest);
   }
   else if(intentName === 'ArrivalLocation') {
     // Implement this logic
@@ -61,4 +62,4 @@ module.exports = function(intentRequest, callback) {
 
 
 
-}
+};

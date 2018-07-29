@@ -15,7 +15,8 @@ module.exports.intents = (event, context, callback) => {
     console.log(`event.bot.name=${event.bot.name}`);
 
     // Distinguish intents
-    dispatch(event, function(response) {
+    dispatch(event).then(response => {
+      console.log('Dispatch logic finished!!!');
       callback(null, response);
     });
   } catch(err) {

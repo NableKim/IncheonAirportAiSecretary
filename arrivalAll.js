@@ -20,4 +20,4 @@ module.exports = function(intentRequest, callback) {
   else if(source === 'FulfillmnetCodeHook') {
     return handleFulfillmentCodeHook();
   }
-}
+};

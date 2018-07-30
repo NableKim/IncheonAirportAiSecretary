@@ -13,13 +13,13 @@ var request = require('request');
 var format = require('xml-formatter');
 var fs = require('fs');
 var x2j = require('xml2js');
-var api_config = require('./config/openAPIkey.json');
+//var api_config = require('./config/openAPIkey.json');
+
+var date = require('date-and-time');
+var date_list = []; // 일주일치 날짜 담을 배열
 
 const lexResponses = require('./lexResponses');
 const databaseManager = require('./databaseManager');
-
-// 전체 항공편 정보
-var flghtDepartureSchedule = [];
 
 // Slot값 타당성 검사 후 사용자에게 보낼 메세지 구성요소 만들기
 function buildValidationResult(isValid, violatedSlot, messageContent, options) {
@@ -38,30 +38,65 @@ function buildValidationResult(isValid, violatedSlot, messageContent, options) {
   };
 }
 
+function getButtons(options) {
+  var buttons = [];
+  _.forEach(options, option => {
+    buttons.push({
+      text: option,
+      value: option
+    });
+  });
+  return buttons;
+}
+
+function getOptions(title, date_list) {
+  return {
+    title,
+    imageUrl : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyDigAdGpSj9gTufkHNKpospNRMXUwrS03YMJzN3yYXYznbZadQg',
+    buttons : getButtons(date_list)
+  };
+}
+
 // 사용자가 입력한 목적지, 항공사, 출발 일자, 항공편명이 적절한 입력인지 판단하는 함수
 function validateFlightInfo(daDepartureDate, daDestination, daAirline, daFlightNum) {
   console.log("validateFlightInfo : 사용자로부터 받은 Slot값 적절성 판단");
 
+  // 출발 일자 적합성 판단
   if(!daDepartureDate) {
-    // 참고)미국·캐나다의 서머타임은 매년 3월 두번째 일요일에 시작되어 11월 첫번째 일요일에 끝난다.
-    // 서머타임 적용시 -13시간 차이, 서머타임 해제시 -14시간 차이
+    // change string to date
+    var input_date = date.parse(daDepartureDate, 'YYYY-MM-DD');
 
-    // TODO: 출발 일자 적합성 판단
-    // 서머 타임 확인
-      // 오늘을 기준으로 일주일 이내의 날짜라면
-        // 입력받은 날짜가 오늘 또는 내일 날짜라면
-          // 오늘이라면
-            // 현재 미국 시간이 0~11시 사이(서머타임 적용시)라면 == 한국과 같은 날
-            // 현재 미국 시간이 11~24시 사이라면 == 한국보다 하루 늦음
-              // 일자 하루 증가시켜서 계산
-          // 내일이라면
-            // 현재 미국 시간이 0~11시 사이(서머타임 적용시)라면 == 한국과 같은 날
-              // 오늘 일자에 1일 추가
-            // 현재 미국 시간이 11~24시 사이라면 == 한국보다 하루 늦음
-              // 일자 이틀 증가시켜서 계산
-        // 입력받은 날짜가 오늘 또는 내일 날짜가 아니라면
-      // 오늘을 기준으로 일주일 이내의 날짜가 아니라면
+    // TODO : 사용자가 다음주, 이번주 이런식으로 입력하면 날짜값이 이상하게 올테니 그거에 대한 예외처리 하기
+
+    // NOTE : input_date는 버지니아 북부 시간 기준이므로 한국 시간으로 변경해주기
+    var diff_days = date.subtract(today, input_date).toDays();  // 날짜 차이 계산
+    // input_date가 어제, 오늘, 내일이라면
+    if(-1<=diff_days && diff_days <= 1) {
+      // 섬머 타임 확인
+        // 예스
+          // input_data = date.addHours(input_data, 13);
+        // 노우
+          // input_data = date.addHours(input_data, 14);
+    }
+
+    const today = new Date();
+    for(var i=0; i<7; i++)
+      date_list.push(date.addDays(today, i));
+    diff_days = date.subtract(today, input_date).toDays();  // 날짜 차이 계산
+
+    // input_date가 오늘을 기준으로 일주일 이내의 날짜가 아니라면
+    if(0 > diff_days || diff_days > 6) {
         // 출발 일자 다시 받아!
+        const options = getOptions('Select a date', date_list);
+        return buildValidationResult(false, 'daDepartureDate', `it's invalid date. Please tell me date inside 7 days!`, options);
+    }
+
+    /* NOTE:
+    *   참고)미국·캐나다의 서머타임은 매년 3월 두번째 일요일에 시작되어 11월 첫번째 일요일에 끝난다.
+    *   서머타임 적용시 -13시간 차이, 서머타임 해제시 -14시간 차이
+    *   현재 미국 시간이 0~11시 사이(서머타임 적용시)라면 == 한국과 같은 날
+    *   현재 미국 시간이 11~24시 사이라면 == 한국보다 하루 늦음
+    */
   }
 
   // 항공편명 정보가 입력되었다면
@@ -103,8 +138,8 @@ function buildUserLatestFlightResult(slots, messageContent) {
 }
 
 function getFlightDepartureSchedule() {
-  var url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerDeparturesDS';
-  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
+  //var url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerDeparturesDS';
+  //var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
   //queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent('SEA'); // 도착지 공항코드
 
 
@@ -112,37 +147,35 @@ function getFlightDepartureSchedule() {
 
 // Myflght DB에서 사용자의 최근 비행기 정보를 가져오기
 function findUserLatestFlight(userId) {
-
-  // DB에서 데이터 가져오고
+/*
+  // 최근 조회한 항공편의 일자, 도착지, 항공사, 항공편명 가져오고
   const item = databaseManager.findUserLatestFlight(userId);
   console.log(`findUserLatestFlight's Result : ${JSON.stringify(item)}`);
 
-  // TODO: 운항정보 API에서 운항 스케줄 전부 가져오기
-
-  // TODO: 운항 일자와 비행기편명을 가지고 사용자의 항공편을 골라내기
-  const departureDate = item.Item.date;
-  const flightNum = item.Item.flightNum;
-
   // 골라낸 후 값 저장
   const slots = {
-    destination: "",
-    airline: "",
-    departureDate: "",
-    departureTiem: "",
-    flightNum: "",
+    destination: item.Item.date,
+    airline: item.Item.airline,
+    departureDate: item.Item.date,
+    flightNum: item.Item.flightNum
   };
 
   // 확인 메세지 구성
   return buildUserLatestFlightResult(slots, `Your flight is ${slots.flightNum} leaving for ${slots.destination}?`);
+*/
 
-
-/* ~.then()를 쓰니가 함수로 인식이 안되는 오류가 있음... 그래서 일단 보류
   return databaseManager.findUserLatestFlight(userId).then(item => {
     // DB에서 비행기 운항일자, 항공편명, 도착/출발 구분 정보를 가져옴
     console.log(`findUserLatestFlight's Result : ${JSON.stringify(item)}`);
-    return buildValidationResult(item.Item.date, item.Item.flightNum, `Would you like to order a ${item.Item.date} ${item.Item.flightNum}?`);
+    const slots = {
+      destination: item.Item.date,
+      airline: item.Item.airline,
+      departureDate: item.Item.date,
+      flightNum: item.Item.flightNum
+    };
+    return buildValidationResult(slots, `Would you like to order a ${item.Item.date} ${item.Item.flightNum}?`);
   });
-*/
+
 }
 
 module.exports = function(intentRequest, callback) {
@@ -150,7 +183,6 @@ module.exports = function(intentRequest, callback) {
   var daDestination=intentRequest.currentIntent.slots.daDestination;
   var daAirline=intentRequest.currentIntent.slots.daAirline;
   var daDepartureDate=intentRequest.currentIntent.slots.daDepartureDate;
-  var daDepartureTime=intentRequest.currentIntent.slots.daDepartureTime;
   var daFlightNum=intentRequest.currentIntent.slots.daFlightNum;
   const slots = intentRequest.currentIntent.slots;
 
@@ -162,11 +194,10 @@ module.exports = function(intentRequest, callback) {
     // 최근 비행기 정보가 있으면
     return findUserLatestFlight(intentRequest.userId).then(item => {
       console.log(`findUserLatestFlight : ${JSON.stringify(item)}`);
-      slots.daDestination = slots.destination;
-      slots.daAirline = slots.airline;
-      slots.daDepartureDate = slots.departureDate;
-      slots.daDepartureTime = slots.departureTiem;
-      slots.daFlightNum = slots.flightNum;
+      slots.daDestination = item.slots.destination; // 도착지
+      slots.daAirline = item.slots.airline; // 항공사
+      slots.daDepartureDate = item.slots.departureDate; // 출발일자
+      slots.daFlightNum = item.slots.flightNum; // 항공편명
 
       // 찾은 항공편이 사용자가 찾고 있는 항공편이 맞는지 묻기
       // 최근에 조회했던 비행기 정보를 사용자에게 확인하기위해 메세지 전송

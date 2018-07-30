@@ -2,7 +2,9 @@
 
 const uuidV1 = require('uuid/v1');
 const AWS = require('aws-sdk');
-const promisify = require('es6-promisify');
+const util = require('util');
+require('util.promisify').shim();
+//const promisify = require('es6-promisify');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const _ = require('lodash');
 
@@ -10,45 +12,36 @@ const _ = require('lodash');
 module.exports.findUserLatestFlight = function(userId) {
   console.log('Lets find user latest flight!!!');
 
+/*
   // 디비에서 데이터 찾아왔다고 치고
   return {
     Item: {
         "userId": "tzglofqw286zg4i5zrreo3m10in3pxs9",
         "date": "20180729",
         "flightNum": "KE657",
+        "airline" : "Korean Air",
+        "place" : "Seattle",
         "flightClassifi": "D"
       }
   };
-  /*
+*/
+
   // userId를 가지고 디비 정보 검색 후 반환
   const params = {
-    TableName: 'myFlight-table',
+    TableName : 'myFlight-table',
     Key : {
       userId
     }
   };
 
-  const getAsync = function(params) {
-    return new Promise(function(resolve, reject) {
-      dynamo.get(params, function(err, data) {
-        if(err) reject(Error("Error : Can't get data from DB!"));
-        else if(_.isEmpty(data)) {
-          console.log(`User with userId:${userId} not found`);
-          reject(new Error(`User with userId:${userId} not found`));
-        }
-        else {
-          console.log(data);
-          resolve(data);
-        }
-      });
-    });
-  };
+  const getAsync = util.promisify(dynamo.get, dynamo);
 
-  return getAsync(params).then((item) => {
-    console.log(`Getting myFlight Info : ${JSON.stringify(item)}`);
-    return item;
-  }).catch((error) => {
-    console.log(error);
+  return getAsync(params).then(response => {
+    if(_.isEmpty(response)) {
+      console.log(`User with userId:${userId} not found`);
+      return Promise.reject(new Error(`User with userId:${userId} not found`));
+    }
+    return response.Item;
   });
-  */
+
 };

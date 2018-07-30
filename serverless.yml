@@ -22,8 +22,8 @@ provider:
   runtime: nodejs6.10
   region: us-east-1
   iamRoleStatements:
-    - Effect : Allow
-      Action :
+    - Effect: Allow
+      Action:
         - dynamodb:PutItem
         - dynamodb:GetItem
       Resource:

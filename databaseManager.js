@@ -45,3 +45,49 @@ module.exports.findUserLatestFlight = function(userId) {
   });
 
 };
+
+// 도착지 영문명 -> 코드로 바꾸기 위해 DB에서 읽어옴
+module.exportss.getDestinationCode = function(destinationName_en) {
+  console.log('Entered databaseManager\'s getDestinationCode...');
+
+
+  const params = {
+    TableName: 'airport-table',
+    Key:{
+      "name_en" : destinationName_en
+    }
+  };
+
+  DynamoDB.get(params, function(err, data) {
+    if(err) {
+      console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+      return null;
+    } else {
+      console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+      return data;
+    }
+  });
+};
+
+// 항공사 영문명 -> 국문으로 바꾸기 위해 DB에서 읽어옴
+module.exportss.getAirlineNameKR = function(airlineName_en) {
+  console.log('Entered databaseManager\'s getAirlineNameKR...');
+
+  const params = {
+    TableName: 'airline-table',
+    Key:{
+      "name_en" : airlineName_en
+    }
+  };
+
+  DynamoDB.get(params, function(err, data) {
+    if(err) {
+      console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+      return null;
+    } else {
+      console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+      return data;
+    }
+  });
+
+};

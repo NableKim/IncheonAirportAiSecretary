@@ -13,6 +13,7 @@ const dispatch = require('./dispatch');
 module.exports.intents = (event, context, callback) => {
   try {
     console.log(`event.bot.name=${event.bot.name}`);
+    console.log(`intentRequest 내용 : ${JSON.stringify(event)}`);
 
     // Distinguish intents
     dispatch(event).then(response => {

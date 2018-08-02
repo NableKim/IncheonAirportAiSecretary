@@ -178,7 +178,7 @@ function findUserLatestFlight(userId) {
       departureDate: item.Item.date,
       flightNum: item.Item.flightNum
     };
-    return buildValidationResult(slots, `Would you like to order a ${item.Item.date} ${item.Item.flightNum}?`);
+    return buildUserLatestFlightResult(slots, `Would you like to order a ${item.Item.date} ${item.Item.flightNum}?`);
   });
 
 }

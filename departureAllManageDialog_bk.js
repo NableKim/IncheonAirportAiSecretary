@@ -240,7 +240,7 @@ module.exports = function(intentRequest, callback) {
       // 방법 2. 디비에서 도착지 code를 가져오는 수 밖에...
       var dst_result = databaseManager.getDestinationCode(daDestination);
       const destinationCode = dst_result['airport_code'];
-      var flightSchedule_list = getDataFromAPI.getFlightDepartureSchedule(destination_code); // 일주일치 daDestination행 항공편 받아오기
+      var flightSchedule_list = getDataFromAPI.getFlightDepartureSchedule(destinationCode); // 일주일치 daDestination행 항공편 받아오기
 
       // 출발일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축
       var finalFlightSchedule = [];

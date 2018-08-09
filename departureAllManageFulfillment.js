@@ -17,16 +17,52 @@ require('util.promisify').shim();
 function buildFulfillmentResult(fulfillmentState, messageContent) {
   return {
     fulfillmentState,
-    message: { contentType: 'PlainText', content: messageContent}
+    message: { contentType: 'PlainText', content: messageContent},
+    /*responseCard: {
+      "contentType": "application/vnd.amazonaws.card.generic",
+      "genericAttachments": [
+          {
+             "title":"Departure Flight Search Result",
+             "subTitle":"card-sub-title",
+             "imageUrl":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCkfhVc-OcAJNS7pEAYeQjq5yg6cYEziefkc39EruT3Pog9EHm",
+             "attachmentLinkUrl":"https://www.airport.kr/ap/ko/map/mapInfo.do#",
+             "buttons":[
+              ]
+           }
+       ]
+     }*/
   };
 }
 
 function saveMyFlight(intentRequest, flightInfo) {
   return databaseManager.saveMyflightToDB(intentRequest).then(item => {
-    var fulfillMessage = `estimatedDateTime : ${flightInfo.estimatedDateTime[0]} airport : ${flightInfo.airport[0]} estimatedDateTime : ${flightInfo.estimatedDateTime[0]} scheduleDateTime : ${flightInfo.scheduleDateTime[0]} chkinrange : ${flightInfo.chkinrange[0]} gatenumber : ${flightInfo.gatenumber[0]} airportcode : ${flightInfo.airportcode[0]} terminalid : ${flightInfo.terminalid[0]}`;
+    var terminal= {
+      "P01":"Terminal 1",
+      "P02":"Concourse A",
+      "P03":"Terminal 2"
+    };
+    const terminalid = terminal[flightInfo.terminalid[0]];
+
+    var fulfillMessage = `
+      Date : ${flightInfo.estimatedDateTime[0].substring(0,8)}\n
+      Destination : ${flightInfo.airport[0]}(${flightInfo.airportcode[0]})\n
+      Airline : ${intentRequest.currentIntent.slots.daAirline}\n
+      Flight Number : ${flightInfo.flightId[0]}\n
+      Estimated Time : ${flightInfo.estimatedDateTime[0].substring(8,10)}:${flightInfo.estimatedDateTime[0].substring(10,12)}\n
+      Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}\n
+      Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}\n
+      Check in : ${flightInfo.chkinrange[0]}\n
+      Gate : ${flightInfo.gatenumber[0]}\n
+      terminalid : ${terminalid}`;
     //remark : ${flightInfo.remark[0]}\n
 
     return buildFulfillmentResult('Fulfilled', fulfillMessage);
+
+
+
+
+
+
   });
 }
 
@@ -81,7 +117,7 @@ module.exports = function(intentRequest, callback) {
         // 세션정보 없애기
         console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
         intentRequest.sessionAttributes={};
-        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`});
+        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`}, null);
       }
       else {
         console.log('사용자가 찾는 항공편 찾았다!');
@@ -90,7 +126,7 @@ module.exports = function(intentRequest, callback) {
           // 세션정보 없애기
           console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
           intentRequest.sessionAttributes={};
-          return lexResponses.close(intentRequest.sessionAttributes, fulFillmentResult.fulfillmentState, fulFillmentResult.message);
+          return lexResponses.close(intentRequest.sessionAttributes, fulFillmentResult.fulfillmentState, fulFillmentResult.message, null);
         });
       }
     }
@@ -99,6 +135,6 @@ module.exports = function(intentRequest, callback) {
     // 세션정보 없애기
     console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
     intentRequest.sessionAttributes={};
-    return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`});
+    return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`}, null);
   });
 };

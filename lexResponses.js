@@ -24,7 +24,19 @@ module.exports.elicitSlot = function(sessionAttributes, intentName, slots, slotT
   };
 };
 
-module.exports.close = function(sessionAttributes, fulfillmentState, message) {
+module.exports.close = function(sessionAttributes, fulfillmentState, message, responseCard) {
+  if(responseCard!=null) {
+    return {
+      sessionAttributes,
+      dialogAction: {
+        type : 'Close',
+        fulfillmentState,
+        message,
+        responseCard
+      },
+    };
+  }
+  // null이 아니면
   return {
     sessionAttributes,
     dialogAction: {

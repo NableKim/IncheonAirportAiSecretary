@@ -132,7 +132,7 @@ module.exports.validateFlightDate = function(slotDetails, departureDate) { // YY
 
 
 //===========================================================================================
-// 출발 일자 적합성 판단
+// 도착지 적합성 판단
 module.exports.validateFlightDestination = function(destination) {
   console.log('Let\'s Validate Destination...');
 
@@ -144,7 +144,7 @@ module.exports.validateFlightDestination = function(destination) {
 };
 
 //===========================================================================================
-// 출발 일자 적합성 판단
+// 항공사 적합성 판단
 module.exports.validateFlightAirline = function(airline) {
   console.log('Let\'s Validate Airline...');
 

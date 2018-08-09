@@ -164,7 +164,21 @@ module.exports = function(intentRequest, callback) {
   var daDestination=intentRequest.currentIntent.slots.daDestination;
   var daAirline=intentRequest.currentIntent.slots.daAirline;
   var daFlightId=intentRequest.currentIntent.slots.daFlightId;
-  const slots = intentRequest.currentIntent.slots;
+  var slots = intentRequest.currentIntent.slots;
+
+  // 확인 메세지에 대한 응답으로 부정적 대답이 들어온 경우 delegate실행
+  if(intentRequest.currentIntent.confirmationStatus == 'Denied') {
+    // 슬롯값 초기화
+    intentRequest.currentIntent.slots.daDepartureDate = null; // 출발일자
+    intentRequest.currentIntent.slots.daDestination = null; // 도착지(영문명)
+    intentRequest.currentIntent.slots.daAirline = null; // 항공사(영문)
+    intentRequest.currentIntent.slots.daFlightId = null; // 항공편명
+
+    // 세션값 초기화
+    intentRequest.sessionAttributes={};
+
+    return lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots);
+  }
 
   // Slot 데이터가 아무것도 없을 때(대화의 시작)
   if(daDestination === null && daAirline === null && daDepartureDate === null) {
@@ -237,7 +251,7 @@ module.exports = function(intentRequest, callback) {
               // 세션정보 없애기
               console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
               intentRequest.sessionAttributes={};
-              return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`});
+              return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`}, null);
             }
             else {
               console.log('Length of flightSchedule_list : %d', flightSchedule_list.length);
@@ -265,7 +279,7 @@ module.exports = function(intentRequest, callback) {
                 // 세션정보 없애기
                 console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
                 intentRequest.sessionAttributes={};
-                return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`});
+                return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight going to ${daDestination} during upcoming 7 days`}, null);
               }
               else if(finalFlightSchedule.length == 1) {
                 console.log('사용자가 찾는 항공편 찾았다!');

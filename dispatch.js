@@ -8,7 +8,7 @@
  * Created by Nablekim94@gmail.com 2018-07-15
 */
 
-const departureAll = require('./departureAll');
+const departureAll = require('./departureInfo/departureAll');
 //const arrivalAll = require('./arrivalAll');
 
 module.exports = function(intentRequest) {

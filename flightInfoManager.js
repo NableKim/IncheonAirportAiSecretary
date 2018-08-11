@@ -104,7 +104,7 @@ module.exports.validateFlightDate = function(slotDetails, departureDate) { // YY
   // input_date가 오늘을 기준으로 일주일 이내의 날짜가 아니라면
   if(0 > diff_days || diff_days > 6) {
     // 오늘부터 일주일치 날짜 담아두기
-    for(var i=0; i<7; i++)
+    for(var i=0; i<5; i++)
       date_list.push(date.format(date.addDays(today, i), 'YYYY-MM-DD'));
 
     // 출발 일자 다시 받아!

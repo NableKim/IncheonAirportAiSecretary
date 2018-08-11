@@ -8,11 +8,12 @@
  * Created by Nablekim94@gmail.com 2018-07-15
 */
 
-const lexResponses = require('./lexResponses');
-const databaseManager = require('./databaseManager');
-const getDataFromAPI = require('./getDataFromAPI');
+const lexResponses = require('../lexResponses');
+const databaseManager = require('../databaseManager');
+const getDataFromAPI = require('../getDataFromAPI');
 const util = require('util');
 require('util.promisify').shim();
+const _ = require('lodash');
 
 function buildFulfillmentResult(fulfillmentState, messageContent) {
   return {
@@ -35,34 +36,47 @@ function buildFulfillmentResult(fulfillmentState, messageContent) {
 }
 
 function saveMyFlight(intentRequest, flightInfo) {
+  console.log('flightInfo값은 : '+JSON.stringify(flightInfo));
   return databaseManager.saveMyflightToDB(intentRequest).then(item => {
     var terminal= {
       "P01":"Terminal 1",
       "P02":"Concourse A",
       "P03":"Terminal 2"
     };
+    // 운항상태
+    var status = {
+      "출발":"Departed",
+      "결항":"Departed",
+      "지연":"Departed",
+      "탑승중":"Departed",
+      "마감예정":"Departed",
+      "탑승마감":"Gate Closing",
+      "탑승준비":"Departed"
+    };
+
     const terminalid = terminal[flightInfo.terminalid[0]];
 
     var fulfillMessage = `
       Date : ${flightInfo.estimatedDateTime[0].substring(0,8)}\n
-      Destination : ${flightInfo.airport[0]}(${flightInfo.airportcode[0]})\n
+      Destination : ${intentRequest.currentIntent.slots.daDestination}(${flightInfo.airportcode[0]})\n
       Airline : ${intentRequest.currentIntent.slots.daAirline}\n
       Flight Number : ${flightInfo.flightId[0]}\n
       Estimated Time : ${flightInfo.estimatedDateTime[0].substring(8,10)}:${flightInfo.estimatedDateTime[0].substring(10,12)}\n
       Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}\n
       Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}\n
       Check in : ${flightInfo.chkinrange[0]}\n
-      Gate : ${flightInfo.gatenumber[0]}\n
       terminalid : ${terminalid}`;
-    //remark : ${flightInfo.remark[0]}\n
+
+    // 비행편이 오늘날짜라면 응답메세지에 비행기 운항상태 및 게이트 번호가 추가로 올것이다. 이것을 추가해주자
+    if(!_.isEmpty(flightInfo.gatenumber)) {
+      fulfillMessage += `\nGate : ${flightInfo.gatenumber[0]}`;
+    }
+
+    if(!_.isEmpty(flightInfo.remark)) {
+      fulfillMessage +=`\n Status : ${status[flightInfo.remark[0]]}`;
+    }
 
     return buildFulfillmentResult('Fulfilled', fulfillMessage);
-
-
-
-
-
-
   });
 }
 

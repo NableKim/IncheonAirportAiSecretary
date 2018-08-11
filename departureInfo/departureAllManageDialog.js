@@ -7,155 +7,12 @@
  *
  * Created by Nablekim94@gmail.com 2018-07-26
 */
-//const _ = require('lodash');
 
-const lexResponses = require('./lexResponses');
-const databaseManager = require('./databaseManager');
-const flightInfoManager = require('./flightInfoManager');
-const getDataFromAPI = require('./getDataFromAPI');
-
+const lexResponses = require('../lexResponses');
+const getDataFromAPI = require('../getDataFromAPI');
+const validateFlightInfo = require('./validateFlightInfo');
+const findUserLatestFlight = require('./findUserLatestFlight');
 const _ = require('lodash');
-
-// Slot값 타당성 검사 후 사용자에게 보낼 메세지 구성요소 만들기
-function buildValidationResult(isValid, violatedSlot, messageContent, options, sessionAttributes) {
-  if(messageContent == null) {
-    return {
-      isValid,
-      violatedSlot,
-      options,
-      sessionAttributes
-    };
-  }
-
-  if(options == null) {
-    return {
-      isValid,
-      violatedSlot,
-      message : {contentType : 'PlainText', content: messageContent},
-      sessionAttributes
-    };
-  }
-
-  return {
-    isValid,
-    violatedSlot,
-    message : {contentType : 'PlainText', content: messageContent},
-    options,
-    sessionAttributes
-  };
-}
-
-// =======================================================================================================================================
-// 사용자가 입력한 목적지, 항공사, 출발 일자, 항공편명이 적절한 입력인지 판단하는 함수
-function validateFlightInfo(sessionAttributes, slotDetails, departureDate, destination, airline) {
-  console.log("validateFlightInfo : 사용자로부터 받은 Slot값 적절성 판단");
-
-  // sessionAttributes가 비어있다면
-  if(_.isEmpty(sessionAttributes)) {
-    console.log('sessionAttributes가 비어있으니 안에 confirmIntent 객체를 만들게요');
-    sessionAttributes['departureDate'] = null;
-    sessionAttributes['destinationCode'] = null;  // 도착지 공항 코드
-    sessionAttributes['airlineNameKR'] = null;
-    sessionAttributes['flightId'] = null;
-  }
-
-  // 출발 일자 적합성 판단
-  if(departureDate!=null && sessionAttributes.departureDate == null) {
-    const validateResultOfDate=flightInfoManager.validateFlightDate(slotDetails, departureDate);
-    // 이 결과가 참
-    if(validateResultOfDate.isValid) {
-      // sessionAttributes에 날짜 정보 반영
-      // departureDate가 YYYY-MM-DD 형식이므로 YYYYMMDD로 변환해서 넣기
-      sessionAttributes['departureDate']=departureDate.substring(0,4)+departureDate.substring(5,7)+departureDate.substring(8,10);
-      console.log(`날짜가 들어갔는가!? : ${JSON.stringify(sessionAttributes)}`);
-      console.log('출발일자가 적합하군요!');
-      return Promise.resolve(buildValidationResult(true, null, null, null, sessionAttributes));
-    }
-    // 이 결과가 거짓
-    else {
-      // 출발 일자를 다시 받도록 하자
-      console.log('출발일자가 부적합하여 다시 받아야겠어요');
-      return Promise.resolve(buildValidationResult(false, 'daDepartureDate', 'it\'s invalid date. Please tell me date inside 7 days!', validateResultOfDate.options, sessionAttributes));
-    }
-  }
-
-
-  // 도착지 정보 적합성 판단
-  if(destination!=null && sessionAttributes.destinationCode == null) {
-    return flightInfoManager.validateFlightDestination(destination).then(validateResultOfDestination => {
-      if(validateResultOfDestination!=null) {
-        // DB에서 가져온 도착지 코드를 sessionAttributes에 업데이트
-        sessionAttributes['destinationCode']=validateResultOfDestination.airport_code;
-        console.log('도착지 이름이 적합하군요!');
-        return buildValidationResult(true, null, null, null, sessionAttributes);
-      }
-      else {  // 결과값이 없다면
-        // 도착지를 다시 받도록 하자
-        console.log('도착지 이름이 부적합하여 다시 받아야겠어요');
-        return buildValidationResult(false, 'daDestination', `${destination} is not exact city name. Please say correct name`, sessionAttributes);
-      }
-    });
-  }
-
-  // 항공사 정보 적합성 판단
-  if(airline!=null && sessionAttributes.airlineNameKR == null) {
-    return flightInfoManager.validateFlightAirline(airline).then(validateResultOfAirline => {
-      if(validateResultOfAirline!=null) {
-        // DB에서 가져온 도착지 코드를 sessionAttributes에 업데이트
-        sessionAttributes['airlineNameKR']=validateResultOfAirline.name_kr;  // 항공사 국문명을 세션에 저장
-        console.log('항공사 이름이 적합하군요!');
-        return buildValidationResult(true, null, null, null, sessionAttributes);
-      }
-      else {  // 결과값이 없다면
-        // 도착지를 다시 받도록 하자
-        console.log('항공사 이름이 부적합하여 다시 받아야겠어요');
-        return buildValidationResult(false, 'daAirline', `${airline} is not exact airline name. Please say correct name`, sessionAttributes);
-      }
-    });
-  }
-
-  // 현재까지의 입력값이 적합할 경우
-  return Promise.resolve(buildValidationResult(true, null, null, null, sessionAttributes));
-}
-
-// =======================================================================================================================================
-// Myflght DB에서 가져온 정보와 메세지 정보를 객체로 만들어서 리턴
-function buildUserLatestFlightResult(slots, messageContent, sessionAttributes) {
-  return {
-    slots,
-    message:{contentType: 'PlainText', content : messageContent},
-    sessionAttributes
-  };
-}
-
-// Myflght DB에서 사용자의 최근 비행기 정보를 가져오기
-function findUserLatestFlight(userId, sessionAttributes) {
-  console.log('MyFlight DB를 조회하자!');
-  return databaseManager.findUserLatestFlight(userId).then(item => {
-    // DB에서 비행기 운항일자, 항공편명, 도착/출발 구분 정보를 가져옴
-    console.log(`findUserLatestFlight's Result : ${JSON.stringify(item)}`);
-
-    // 사용자가 기존에 조회한 내역이 없다면
-    if(item == null)
-      return null;
-
-    sessionAttributes['departureDate'] = item.departureDate;
-    sessionAttributes['destinationCode'] = item.destinationCode;  // 도착지 공항 코드
-    sessionAttributes['airlineNameKR'] = item.airlineName_kr;
-    sessionAttributes['flightId'] = item.flightId;
-
-    // item.departureDate은 YYYYMMDD 형태이므로 -> YYYY-MM-DD 변환 후 slot에 반영
-    var dateString=item.departureDate;
-    console.log(`findUserLatestFlight's Result : ${dateString}`)
-    const slots = {
-      departureDate: dateString.substring(0,4)+'-'+dateString.substring(4,6)+'-'+dateString.substring(6,8),
-      destinationName_en: item.destinationName_en,
-      airlineName_en: item.airlineName_en,
-      flightId: item.flightId
-    };
-    return buildUserLatestFlightResult(slots, `You recently searched ${item.departureDate} ${item.flightId} goint to ${item.destinationName_en}. Do you want to know about that?`, sessionAttributes);
-  });
-}
 
 // =======================================================================================================================================
 module.exports = function(intentRequest, callback) {
@@ -168,6 +25,8 @@ module.exports = function(intentRequest, callback) {
 
   // 확인 메세지에 대한 응답으로 부정적 대답이 들어온 경우 delegate실행
   if(intentRequest.currentIntent.confirmationStatus == 'Denied') {
+    console.log('confirmIntent에 대한 사용자의 입력 : ' + intentRequest.currentIntent.confirmationStatus);
+
     // 슬롯값 초기화
     intentRequest.currentIntent.slots.daDepartureDate = null; // 출발일자
     intentRequest.currentIntent.slots.daDestination = null; // 도착지(영문명)
@@ -177,7 +36,8 @@ module.exports = function(intentRequest, callback) {
     // 세션값 초기화
     intentRequest.sessionAttributes={};
 
-    return lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots);
+    //return Promise.resolve(lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots));
+    return Promise.resolve(lexResponses.elicitSlot(intentRequest.sessionAttributes, intentRequest.currentIntent.name, intentRequest.currentIntent.slots, 'daDepartureDate', {contentType : 'PlainText', content: 'When are you leaving?'}));
   }
 
   // Slot 데이터가 아무것도 없을 때(대화의 시작)

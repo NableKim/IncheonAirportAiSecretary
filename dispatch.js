@@ -10,6 +10,7 @@
 
 const departureAll = require('./departureInfo/departureAll');
 //const arrivalAll = require('./arrivalAll');
+const congestionDegree = require('./congestionDegree/congestionDegree')
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -36,6 +37,8 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'CongestionDegree') {
     // Implement this logic
+    console.log(intentName + ' was called');
+    return congestionDegree(intentRequest);
   }
   else if(intentName === 'DepartureAll') {
     // Implement this logic

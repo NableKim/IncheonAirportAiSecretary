@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * arrivalAll.js - To distinguish CodeHook
+ * departureAll.js - To distinguish CodeHook
  *
  * Incheon Airport AI Secretary based on AWS Lex
  *
@@ -13,7 +13,6 @@ const handleFulfillmentCodeHook = require('./departureAllManageFulfillment');
 
 module.exports = function(intentRequest) {
   console.log("Entered departureAll...");
-
   const source = intentRequest.invocationSource;
 
   if(source === 'DialogCodeHook') {
@@ -21,6 +20,7 @@ module.exports = function(intentRequest) {
     return handleDialogCodeHook(intentRequest);
   }
   else if(source === 'FulfillmentCodeHook') {
+    console.log("Running departureAll's FulfillmentCodeHook...");
     return handleFulfillmentCodeHook(intentRequest);
   }
 };

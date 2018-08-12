@@ -10,8 +10,8 @@
 
 const lexResponses = require('../lexResponses');
 const getDataFromAPI = require('../getDataFromAPI');
-const validateFlightInfo = require('./validateFlightInfo');
-const findUserLatestFlight = require('./findUserLatestFlight');
+const validateDepFlightInfo = require('./validateDepFlightInfo');
+const findUserLatestFlight = require('../findUserLatestFlight');
 const _ = require('lodash');
 
 // =======================================================================================================================================
@@ -44,7 +44,7 @@ module.exports = function(intentRequest, callback) {
   if(daDestination === null && daAirline === null && daDepartureDate === null) {
     // 최근 비행기 정보를 가져와서 사용자에게 뿌려주기 -  myflight DB에서 userId를 식별자로 항공편 정보 불러오기
     console.log("사용자로부터 받은 데이터가 없습니다!");
-    return findUserLatestFlight(intentRequest.userId, intentRequest.sessionAttributes).then(item => {
+    return findUserLatestFlight(intentRequest.userId, intentRequest.sessionAttributes, 'departure').then(item => {
 
       // 사용자가 기존에 조회한 내역이 없다면
       if(item==null)
@@ -75,7 +75,7 @@ module.exports = function(intentRequest, callback) {
   else { // Slot 데이터를 받아온게 있다면(대화 진행 중)
     console.log("사용자로부터 받은 데이터가 있어요!");
 
-    return validateFlightInfo(intentRequest.sessionAttributes, intentRequest.currentIntent.slotDetails, daDepartureDate, daDestination, daAirline).then(validationResult => {
+    return validateDepFlightInfo(intentRequest.sessionAttributes, intentRequest.currentIntent.slotDetails, daDepartureDate, daDestination, daAirline).then(validationResult => {
       //const validationResult = validateFlightInfo(intentRequest.sessionAttributes, daDepartureDate, daDestination, daAirline);
       // 세션값 업데이트
       intentRequest.sessionAttributes = validationResult.sessionAttributes;
@@ -101,7 +101,7 @@ module.exports = function(intentRequest, callback) {
 
           // 출발일, 목적지, 항공사 슬롯값을 다 갖췄다면
           // 운항정보 API에 요청메세지를 보내 운항 일정을 불러온다
-          return getDataFromAPI.getFlightDepartureSchedule(intentRequest.sessionAttributes.destinationCode).then(flightSchedule_list => {
+          return getDataFromAPI.getFlightSchedule(intentRequest.sessionAttributes.destinationCode, 'departure').then(flightSchedule_list => {
             console.log(`flightSchedule_list : ${flightSchedule_list}`);
 
             // 출발일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축

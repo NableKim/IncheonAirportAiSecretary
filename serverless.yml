@@ -30,6 +30,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:GetItem
       Resource:
+        - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/myArrFlight-table*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/myFlight-table*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/airline-table*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/airport-table*"]]
@@ -119,6 +120,19 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
         TableName: "myFlight-table"
+    MyArrFlightTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: "userId"
+          AttributeType: "S"
+        KeySchema:
+        - AttributeName: "userId"
+          KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: "myArrFlight-table"
 
 #resources:
 #  Resources:

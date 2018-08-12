@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * arivalAllManageFulfillment.js - to make flight information that user wants to know
+ * departureAllManageFulfillment.js - to make flight information that user wants to know
  *
  * Incheon Airport AI Secretary based on AWS Lex
  *
@@ -65,7 +65,7 @@ function saveMyFlight(intentRequest, flightInfo) {
       Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}\n
       Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}\n
       Check in : ${flightInfo.chkinrange[0]}\n
-      terminalid : ${terminalid}`;
+      Terminal : ${terminalid}`;
 
     // 비행편이 오늘날짜라면 응답메세지에 비행기 운항상태 및 게이트 번호가 추가로 올것이다. 이것을 추가해주자
     if(!_.isEmpty(flightInfo.gatenumber)) {
@@ -85,13 +85,13 @@ module.exports = function(intentRequest, callback) {
   var daDestination=intentRequest.currentIntent.slots.daDestination;
   var daAirline=intentRequest.currentIntent.slots.daAirline;
   var daDepartureDate=intentRequest.currentIntent.slots.daDepartureDate;
-  var daFlightId=intentRequest.currentIntent.slots.flightId;
+  var daFlightId=intentRequest.currentIntent.slots.daflightId;
 
   // 운항정보 open API에서 정보 불러오기
   // 운항정보 API에 요청메세지를 보내 운항 일정을 불러온다
   const destinationCode = intentRequest.sessionAttributes.destinationCode;
   // 일주일치 daDestination행 항공편 받아오기
-  return getDataFromAPI.getFlightDepartureSchedule(destinationCode).then(flightSchedule_list => {
+  return getDataFromAPI.getFlightSchedule(destinationCode, 'departure').then(flightSchedule_list => {
     console.log(`flightSchedule_list : ${flightSchedule_list}`);
 
     // 입력받은 목적지, 항공사, 출발일자, 항공편명을 가지고 원하는 항공편만 골라내기

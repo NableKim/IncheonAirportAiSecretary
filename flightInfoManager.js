@@ -20,7 +20,7 @@ function getButtons(options) {
 function getOptions(title, date_list) {
   return {
     title,
-    imageUrl : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyDigAdGpSj9gTufkHNKpospNRMXUwrS03YMJzN3yYXYznbZadQg',
+    imageUrl : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Calendar_font_awesome.svg/2000px-Calendar_font_awesome.svg.png',
     buttons : getButtons(date_list)
   };
 }
@@ -41,11 +41,11 @@ Date.prototype.isDstObserved = function () {
 */
 
 // 출발 일자 적합성 판단
-module.exports.validateFlightDate = function(slotDetails, departureDate) { // YYYY-MM-DD
-  console.log('Let\'s Validate FlightDate... slotDetails값은 '+slotDetails+'이고 departureDate는 '+departureDate);
+module.exports.validateFlightDate = function(slotDetails, date_str) { // YYYY-MM-DD
+  console.log('Let\'s Validate FlightDate... slotDetails값은 '+slotDetails+'이고 date는 '+date_str);
 
   // 문자열을 Date객체로 변환
-  var input_date = date.parse(departureDate, 'YYYY-MM-DD');
+  var input_date = date.parse(date_str, 'YYYY-MM-DD');
   /*
   // TODO : 사용자가 다음주, 이번주 이런식으로 입력하면 날짜값이 이상하게 올테니 그거에 대한 예외처리 하기
 
@@ -78,7 +78,7 @@ module.exports.validateFlightDate = function(slotDetails, departureDate) { // YY
 
 /*
   // 사용자의 날짜 입력이 오늘 또는 내일이라는 단어로 들어왔다면
-  if((slotDetails.daDepartureDate.originalValue).toLowerCase().indexOf("today")!=-1 || (slotDetails.daDepartureDate.originalValue).toLowerCase().indexOf("tomorrow")!=-1) {
+  if((slotDetails.dadate.originalValue).toLowerCase().indexOf("today")!=-1 || (slotDetails.dadate.originalValue).toLowerCase().indexOf("tomorrow")!=-1) {
     // 섬머타임인지 확인
   }
 
@@ -133,13 +133,13 @@ module.exports.validateFlightDate = function(slotDetails, departureDate) { // YY
 
 //===========================================================================================
 // 도착지 적합성 판단
-module.exports.validateFlightDestination = function(destination) {
-  console.log('Let\'s Validate Destination...');
+module.exports.validateAirportName = function(place) {
+  console.log('Let\'s Validate place...');
 
   // TODO: 도착지 적합성 판단 - airport-table DB
   // DB에 도착지 도시명이 있으면 그 데이터가 갈거고 아니면 null 반환
-  return databaseManager.getDestinationCode(destination).then(item => {
-      return item;
+  return databaseManager.getAirportCode(place).then(item => {
+    return item;
   });
 };
 
@@ -151,6 +151,6 @@ module.exports.validateFlightAirline = function(airline) {
   // TODO: 항공사 적합성 판단 - airport-table DB
   // DB에 국문 항공사명이 있으면 그 데이터가 갈거고 아니면 null 반환
   return databaseManager.getAirlineNameKR(airline).then(item => {
-      return item;
+    return item;
   });
 };

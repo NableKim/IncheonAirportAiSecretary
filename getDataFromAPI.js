@@ -15,12 +15,19 @@ var api_config = require('./config/openAPIKey.json');
 // queryParams += '&' + encodeURIComponent('파라미터영문명') + '=' + encodeURIComponent('파라미터기본값'); /* 파라미터설명 */
 
 
-module.exports.getFlightDepartureSchedule = function(destination_code) {
+module.exports.getFlightSchedule = function(airport_code, str) {
   console.log(`api_config : ${api_config.flightSchedule_key}`);
-  var url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerDeparturesDS';
-  //var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
+
+  var url = '';
+  if(str=='departure') {
+    url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerDeparturesDS';
+    //var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
+  } else {  // 도착
+    url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerArrivalsDS';
+  }
+
   var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + 'sIHubBZe%2FsPM76R2dlHOOuve9RZrmuzKynUIxWar%2BtvOb209aOTFQikgz0vxGLRBFoSckQ3dZdbrdYLMozHCDg%3D%3D';
-  queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent(destination_code); /* 도착지 코드 */
+  queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent(airport_code); /* 공항 코드 */
 
 
   return new Promise(function(resolve, reject){

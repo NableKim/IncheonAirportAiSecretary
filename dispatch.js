@@ -9,7 +9,7 @@
 */
 
 const departureAll = require('./departureInfo/departureAll');
-//const arrivalAll = require('./arrivalAll');
+const arrivalAll = require('./arrivalInfo/arrivalAll');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -23,7 +23,7 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'ArrivalAll') {
     // Implement this logic
-    //return arrivalAll(intentRequest);
+    return arrivalAll(intentRequest);
   }
   else if(intentName === 'ArrivalLocation') {
     // Implement this logic

@@ -11,12 +11,19 @@ const _ = require('lodash');
 
 
 // myFlight-table에서 최근 조회한 항공 정보 가져오기
-module.exports.findUserLatestFlight = function(userId) {
+module.exports.findUserLatestFlight = function(userId, str) {
   console.log('myFlight-table DB에서 최근 조회한 항공편을 가져오겠습니다');
+
+  var tableName = null;
+  if(str=='departure') {
+    tableName = 'myFlight-table';
+  } else if(str=='arrival'){
+    tableName = 'myArrFlight-table';
+  }
 
   // userId를 가지고 디비 정보 검색 후 반환
   const params = {
-    TableName : 'myFlight-table',
+    TableName : tableName,
     Key : {
       "userId":userId
     }
@@ -41,13 +48,13 @@ module.exports.findUserLatestFlight = function(userId) {
 };
 
 // 도착지 영문명 -> 코드로 바꾸기 위해 DB에서 읽어옴
-module.exports.getDestinationCode = function(destinationName_en) {
-  console.log('Entered databaseManager\'s getDestinationCode...');
+module.exports.getAirportCode = function(airportName_en) {
+  console.log('Entered databaseManager\'s getAirportCode...');
 
   const params = {
     TableName: 'airport-table',
     Key:{
-      "name_en" : destinationName_en
+      "name_en" : airportName_en
     }
   };
 
@@ -74,7 +81,7 @@ module.exports.getDestinationCode = function(destinationName_en) {
         reject(new Error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2)));
       } else {
         if(_.isEmpty(data)) {
-          console.log(`GetItem succeeded. But, There is no data for ${destinationName_en} in airport-table`);
+          console.log(`GetItem succeeded. But, There is no data for ${airportName_en} in airport-table`);
           //reject(new Error(`User with userId:${userId} not found`));
           resolve(null);
         } else {
@@ -201,6 +208,95 @@ const item = {};
                 ":id":item.flightId,
                 ":dn":item.destinationName_en,
                 ":dc":item.destinationCode
+            },
+            ReturnValues:"UPDATED_NEW"
+          };
+
+          console.log('params : '+JSON.stringify(params));
+
+          dynamo.update(params, function(err, data) {
+            if(err) {
+              reject(new Error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2)));
+            } else {
+              console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+              resolve(data.Item);
+            }
+          });
+        }
+      }
+    });
+  });
+};
+
+module.exports.saveMyArrivalflightToDB = function(intentRequest) {
+  console.log('Entered databaseManager\'s saveMyArrivalflightToDB...');
+  // TODO: 이미 사용자가 있다면 Updaye
+  // 없다면 Insert를 해야함
+
+/*
+ 유저아이디  userId
+ 출발일자 arrivalDate            20180807
+ 항공사 영문명 airlineName_en
+ 항공사 국문명 airlineName_kr
+ 항공편명 flightId
+ 출발지 영문명 sourceName_en
+ 출발지 국문명 sourceName_kr
+ 출발지 코드 sourceCode
+*/
+const item = {};
+  item.userId = intentRequest.userId;
+  item.arrivalDate = intentRequest.sessionAttributes.arrivalDate;
+  item.airlineName_en = intentRequest.currentIntent.slots.aaAirline;
+  item.airlineName_kr = intentRequest.sessionAttributes.airlineNameKR;
+  item.flightId = intentRequest.sessionAttributes.flightId;
+  item.sourceName_en = intentRequest.currentIntent.slots.aaSource;
+  item.sourceCode = intentRequest.sessionAttributes.sourceCode;
+
+  console.log('myArrFlightDB에 삽입 또는 업데이트 전 item 값 : '+JSON.stringify(item));
+  var params = {
+    TableName: 'myArrFlight-table',
+    Key:{
+        "userId": item.userId
+    }
+  };
+
+  return new Promise(function(resolve, reject){
+    // 조회
+    dynamo.get(params, function(err, data) {
+      if(err) {
+        reject(new Error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2)));
+      } else {
+        if(_.isEmpty(data)) { // 새롭게 삽입해야겠군
+          console.log(`GetItem succeeded. But, There is no data for ${item.userId}. So We will add new USER`);
+          params = {
+            TableName: 'myArrFlight-table',
+            Item:item
+          };
+
+          dynamo.put(params, function(err, data) {
+            if(err) {
+              reject(new Error("Unable to put item. Error JSON:", JSON.stringify(err, null, 2)));
+            } else {
+              console.log("Put Item succeeded:", JSON.stringify(data, null, 2));
+              resolve(data.Item);
+            }
+          });
+        } else {  // 업데이트해야겠군
+          console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+
+          params = {
+            TableName: 'myArrFlight-table',
+            Key:{
+                "userId": item.userId
+            },
+            UpdateExpression:"set arrivalDate=:ad, airlineName_en=:ae, airlineName_kr=:ak, flightId=:id, sourceName_en=:se, sourceCode=:sc",
+            ExpressionAttributeValues:{
+                ":ad":item.arrivalDate,
+                ":ae":item.airlineName_en,
+                ":ak":item.airlineName_kr,
+                ":id":item.flightId,
+                ":se":item.sourceName_en,
+                ":sc":item.sourceCode
             },
             ReturnValues:"UPDATED_NEW"
           };

@@ -124,7 +124,7 @@ module.exports = function(intentRequest, callback) {
         // 세션정보 없애기
         console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
         intentRequest.sessionAttributes={};
-        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight from ${daDestination} during upcoming 7 days`}, null);
+        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `There is no flight from ${aaSource} ${aaArrivalDate}`}, null);
       }
       else {
         console.log('사용자가 찾는 항공편 찾았다!');

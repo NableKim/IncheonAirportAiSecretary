@@ -5,7 +5,7 @@ var request = require('request');
 var format = require('xml-formatter');
 var fs = require('fs');
 var x2j = require('xml2js');
-var api_config = require('./config/openAPIkey.json');
+var api_config = require('../config/openAPIkey.json');
 
 var url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlights/getPassengerDepartures';
 var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
@@ -13,7 +13,7 @@ queryParams += '&' + encodeURIComponent('to_time') + '=' + encodeURIComponent('2
 queryParams += '&' + encodeURIComponent('airport') + '=' + encodeURIComponent(''); /* 도착지 공항 코드 */
 queryParams += '&' + encodeURIComponent('flight_id') + '=' + encodeURIComponent(''); /* 운항 편명 */
 queryParams += '&' + encodeURIComponent('airline') + '=' + encodeURIComponent(''); /* 항공사 코드 */
-queryParams += '&' + encodeURIComponent('lang') + '=' + encodeURIComponent('K'); /* 국문=K, 영문=E, 중문=C, 일문=J, Null=K */
+queryParams += '&' + encodeURIComponent('lang') + '=' + encodeURIComponent('E'); /* 국문=K, 영문=E, 중문=C, 일문=J, Null=K */
 queryParams += '&' + encodeURIComponent('from_time') + '=' + encodeURIComponent('2300'); /* 검색 시작 시간 (HHMM) */
 
 

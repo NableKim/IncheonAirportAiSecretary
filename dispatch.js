@@ -10,7 +10,8 @@
 
 const departureAll = require('./departureInfo/departureAll');
 const arrivalAll = require('./arrivalInfo/arrivalAll');
-const congestionDegree = require('./congestionDegree/congestionDegree');
+//const congestionDegree = require('./congestionDegree/congestionDegree');
+const findingArea = require('./findingAreaInfo/findingArea');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -38,7 +39,7 @@ module.exports = function(intentRequest) {
   else if(intentName === 'CongestionDegree') {
     // Implement this logic
     console.log(intentName + ' was called');
-    return congestionDegree(intentRequest);
+    //return congestionDegree(intentRequest);
   }
   else if(intentName === 'DepartureAll') {
     // Implement this logic
@@ -58,6 +59,10 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'ParkingInfo') {
     // Implement this logic
+  }
+  else if(intentName === 'FindingArea') {
+    console.log(intentName + ' was called');
+    return findingArea(intentRequest);
   }
   else {
     throw new Error(`Error : There is no intent with name ${intentName}!!!`);

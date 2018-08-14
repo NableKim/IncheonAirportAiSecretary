@@ -60,3 +60,57 @@ module.exports.getFlightSchedule = function(airport_code, str) {
     );
   });
 };
+
+module.exports.getTodayFlightSchedule = function(sessionAttributes, str) {
+  console.log(`api_config : ${api_config.flightSchedule_key}`);
+
+
+  var url = '';
+  var airportCode = null;
+  if(str=='departure') {
+    url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlights/getPassengerDepartures';
+    airportCode = sessionAttributes.destinationCode;
+  } else {  // 도착
+    url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlights/getPassengerArrivals';
+    airportCode = sessionAttributes.sourceCode;
+  }
+
+  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
+  queryParams += '&' + encodeURIComponent('to_time') + '=' + encodeURIComponent('2400'); /* 검색 종료 시간 (HHMM) */
+  queryParams += '&' + encodeURIComponent('airport') + '=' + encodeURIComponent(airportCode); /* 도착지 공항 코드 */
+  queryParams += '&' + encodeURIComponent('flight_id') + '=' + encodeURIComponent(sessionAttributes.flightId); /* 운항 편명 */
+  //queryParams += '&' + encodeURIComponent('airline') + '=' + encodeURIComponent(''); /* 항공사 코드 */
+  queryParams += '&' + encodeURIComponent('lang') + '=' + encodeURIComponent('E'); /* 국문=K, 영문=E, 중문=C, 일문=J, Null=K */
+  queryParams += '&' + encodeURIComponent('from_time') + '=' + encodeURIComponent('0000'); /* 검색 시작 시간 (HHMM) */
+
+
+  return new Promise(function(resolve, reject){
+    request(
+      {
+        url: url + queryParams,
+        method: 'GET'
+      },
+      function(error, response, body) {
+        //console.log('Status', response.statusCode);
+        //console.log('Headers', JSON.stringify(response.headers));
+
+        // xml -> json 변환
+        var xml = body; // 실제 데이터
+        var formattedXml = format(xml);
+        var p = new x2j.Parser();
+        p.parseString(xml, function(err, result) {
+          if(err){
+            console.log(err);
+            reject(err);
+          }
+          else {
+            var s = JSON.stringify(result, undefined, 3);
+            //console.log("Result"+"\n", s, "\n");
+            console.log(result.response.body[0].items[0].item);
+            resolve(result.response.body[0].items[0].item);
+          }
+        });
+      }
+    );
+  });
+};

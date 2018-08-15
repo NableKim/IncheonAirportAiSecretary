@@ -118,7 +118,8 @@ module.exports = function(intentRequest, callback) {
               console.log('Length of flightSchedule_list : %d', flightSchedule_list.length);
               const departureDate = intentRequest.sessionAttributes.departureDate;
               const airlineNameKR = intentRequest.sessionAttributes.airlineNameKR;
-
+              console.log('날짜 '+departureDate+'  항공사 '+airlineNameKR);
+              
               // 출발일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축해서 저장할 리스트
               var finalFlightSchedule = [];
 

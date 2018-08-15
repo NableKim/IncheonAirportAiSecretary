@@ -56,6 +56,7 @@ module.exports = function(sessionAttributes, currentIntent, departureDate, desti
     if(validateResultOfDate.isValid) {
       // sessionAttributes에 날짜 정보 반영
       // departureDate가 YYYY-MM-DD 형식이므로 YYYYMMDD로 변환해서 넣기
+      departureDate=validateResultOfDate.currentIntent.slots.daDepartureDate;
       sessionAttributes['departureDate']=departureDate.substring(0,4)+departureDate.substring(5,7)+departureDate.substring(8,10);
       console.log(`날짜가 들어갔는가!? : ${JSON.stringify(sessionAttributes)}`);
       console.log('출발일자가 적합하군요!');

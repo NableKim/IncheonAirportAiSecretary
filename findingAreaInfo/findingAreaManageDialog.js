@@ -31,7 +31,7 @@ module.exports = function(intentRequest, callback) {
 
       // 사용자가 기존에 조회한 내역이 없다면 대화 끝내기
       if(item==null)
-        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `No any your flihgt info. Do you want to register your flight and get flight Information? Then, please say \"Departure informaion\"`});
+        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `No any your flight info. Do you want to register your flight and get flight Information? Then, please say \"Departure information\"`});
 
       // 있으면 오늘 날짜인지 비교
       console.log('slots 값 출력 : '+ JSON.stringify(item));
@@ -56,7 +56,7 @@ module.exports = function(intentRequest, callback) {
 
       // 사용자가 기존에 조회한 내역이 없다면 대화 끝내기
       if(item==null)
-        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `No any your flihgt info. Do you want to register your flight and get flight Information? Then, please say \"Arrival informaion\"`});
+        return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `No any your flihgt info. Do you want to register your flight and get flight Information? Then, please say \"Arrival information\"`});
 
       // 있으면 오늘 날짜인지 비교
       console.log('slots 값 출력 : '+ JSON.stringify(item));

@@ -46,12 +46,12 @@ function saveMyFlight(intentRequest, flightInfo) {
     // 운항상태
     var status = {
       "출발":"Departed",
-      "결항":"Departed",
-      "지연":"Departed",
-      "탑승중":"Departed",
-      "마감예정":"Departed",
+      "결항":"Cancelled",
+      "지연":"Delayed",
+      "탑승중":"Borading",
+      "마감예정":"Final Call",
       "탑승마감":"Gate Closing",
-      "탑승준비":"Departed"
+      "탑승준비":"Gate Open"
     };
 
     const terminalid = terminal[flightInfo.terminalid[0]];
@@ -122,8 +122,6 @@ module.exports = function(intentRequest, callback) {
       }
 
       console.log('finalFlightSchedule 길이 : '+finalFlightSchedule.length);
-
-
 
       // 후보군 압축 과정 실행 결과
       if(finalFlightSchedule.length == 0) {

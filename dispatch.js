@@ -12,12 +12,13 @@ const departureAll = require('./departureInfo/departureAll');
 const arrivalAll = require('./arrivalInfo/arrivalAll');
 //const congestionDegree = require('./congestionDegree/congestionDegree');
 const findingArea = require('./findingAreaInfo/findingArea');
+const departureTime = require('./departureTimeInfo/departureTime');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
   const intentName = intentRequest.currentIntent.name;
 
-  console.log(intentName+' was called!sss');
+  console.log(intentName+' was called!');
 
   // Run the appropriate logic depending on intentName value
   if(intentName === 'AirlineInfo') {
@@ -50,6 +51,7 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'DepartureTime') {
     // Implement this logic
+    return departureTime(intentRequest);
   }
   else if(intentName === 'ExchangeRate') {
     // Implement this logic
@@ -61,7 +63,6 @@ module.exports = function(intentRequest) {
     // Implement this logic
   }
   else if(intentName === 'FindingArea') {
-    console.log(intentName + ' was called');
     return findingArea(intentRequest);
   }
   else {

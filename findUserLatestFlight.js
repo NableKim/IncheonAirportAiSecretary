@@ -24,6 +24,7 @@ module.exports = function(userId, sessionAttributes, str) {
 
     // 출발편에 대한 기록을 가져온 경우
     if(str=='departure') {
+      sessionAttributes = {};
       sessionAttributes['departureDate'] = item.departureDate;
       sessionAttributes['destinationCode'] = item.destinationCode;  // 도착지 공항 코드
       sessionAttributes['airlineNameKR'] = item.airlineName_kr;
@@ -41,6 +42,7 @@ module.exports = function(userId, sessionAttributes, str) {
       return buildUserLatestFlightResult(slots, `You recently searched ${item.departureDate} ${item.flightId} goint to ${item.destinationName_en}. Do you want to know about that?`, sessionAttributes);
     }
     else {  // 도착편에 대한 정보를 가져온 경우
+      sessionAttributes = {};
       sessionAttributes['arrivalDate'] = item.arrivalDate;
       sessionAttributes['sourceCode'] = item.sourceCode;  // 도착지 공항 코드
       sessionAttributes['airlineNameKR'] = item.airlineName_kr;

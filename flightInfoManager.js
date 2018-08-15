@@ -41,82 +41,60 @@ Date.prototype.isDstObserved = function () {
 */
 
 // 출발 일자 적합성 판단
-module.exports.validateFlightDate = function(slotDetails, date_str) { // YYYY-MM-DD
-  console.log('Let\'s Validate FlightDate... slotDetails값은 '+slotDetails+'이고 date는 '+date_str);
+module.exports.validateFlightDate = function(currentIntent, date_str, depORarr) { // YYYY-MM-DD
+
+  console.log('Let\'s Validate FlightDate... slotDetails값은 '+currentIntent.slotDetails+'이고 date는 '+date_str);
+
+  // 한국의 현재 시간 구하기
+  const now = new Date();
+  var koreaCurrentDate = date.addHours(now, 9); // +9시간을 해줘서 한국 시간으로 변경
+  console.log('한국의 현재 시간'+date.format(koreaCurrentDate, 'YYYY/MM/DD HH:mm:ss'));
+
+  var slot_date = null;
+  if(depORarr == 'departure')
+    slot_date = currentIntent.slotDetails.daDepartureDate;
+  else
+    slot_date = currentIntent.slotDetails.aaArrivalDate;
+
+  // 오리지널 입력값이 today이거나 tomorrow 인경우
+  if(slot_date.originalValue == "today" || slot_date.originalValue == "tomorrow") {
+    if(slot_date.originalValue == "tomorrow")
+      koreaCurrentDate = date.addDays(koreaCurrentDate, 1); // 하루 더하기
+
+    console.log('주어진 날짜 입력을 한국 날짜로 변환한 값'+date.format(koreaCurrentDate, 'YYYY/MM/DD HH:mm:ss'));
+    date_str = date.format(koreaCurrentDate, 'YYYY-MM-DD');
+
+    // 한국 시간으로 변경한 결과로 슬롯값 업데이트
+    if(depORarr == 'departure')
+      currentIntent.slots.daDepartureDate = date_str;
+    else
+      currentIntent.slots.aaArrivalDate = date_str;
+  }
 
   // 문자열을 Date객체로 변환
   var input_date = date.parse(date_str, 'YYYY-MM-DD');
-  /*
-  // TODO : 사용자가 다음주, 이번주 이런식으로 입력하면 날짜값이 이상하게 올테니 그거에 대한 예외처리 하기
 
-  // NOTE : input_date는 버지니아 북부 시간 기준이므로 한국 시간으로 변경해주기
-
-
-
-  if(-1<=diff_days && diff_days <= 1) {
-    // 섬머 타임 확인
-      // 예스
-        // input_data = date.addHours(input_data, 13);
-      // 노우
-        // input_data = date.addHours(input_data, 14);
-  }
-  */
-
-  /*
-  한국시간으로 0시~13시까지는 미국은 -1, 한국 0
-
-  오리지널값에 today 또는 tomorrow가 들어있다면
-  	섬머타임이 시행중이라면
-  		한국시간이 0~13시 사이라면
-  			13시간 덧셈
-  			slot값 변경
-  	아니라면
-  		한국시간이 0~13시 사이라면
-  			14시간 덧셈
-  			slot값 변경
-  */
-
-/*
-  // 사용자의 날짜 입력이 오늘 또는 내일이라는 단어로 들어왔다면
-  if((slotDetails.dadate.originalValue).toLowerCase().indexOf("today")!=-1 || (slotDetails.dadate.originalValue).toLowerCase().indexOf("tomorrow")!=-1) {
-    // 섬머타임인지 확인
-  }
-
-
-
-
-  var today = new Date();
-  if (today.isDstObserved()) {
-    console.log('Daylight saving time!');
-  } else {
-    console.log('응 아니야');
-  }
-
-*/
-//===============
-
-  const today = new Date();
-  console.log('현재 날짜와 시간'+date.format(today, 'YYYY/MM/DD HH:mm:ss'));
-  date.format(today, 'YYYY/MM/DD HH:mm:ss')
   // 조회일과 오늘 일수 차이 구하기 = input - today
-  var diff_days = date.subtract(input_date, today).toDays();  // 날짜 차이 계산
+  var diff_days = date.subtract(input_date, now).toDays();  // 날짜 차이 계산
 
   // input_date가 오늘을 기준으로 일주일 이내의 날짜가 아니라면
   if(0 > diff_days || diff_days > 6) {
     // 오늘부터 일주일치 날짜 담아두기
     for(var i=0; i<5; i++)
-      date_list.push(date.format(date.addDays(today, i), 'YYYY-MM-DD'));
+      date_list.push(date.format(date.addDays(now, i), 'YYYY-MM-DD'));
 
     // 출발 일자 다시 받아!
     const options = getOptions('Select a date', date_list);
     return {
       'isValid':false,
+      'currentIntent':currentIntent,
       'options':options
     };
   }
 
   return {
-    'isValid':true
+    'isValid':true,
+    'currentIntent':currentIntent,
   };
 
 
@@ -125,6 +103,19 @@ module.exports.validateFlightDate = function(slotDetails, date_str) { // YYYY-MM
   *   서머타임 적용시 -13시간 차이, 서머타임 해제시 -14시간 차이
   *   현재 미국 시간이 0~11시 사이(서머타임 적용시)라면 == 한국과 같은 날
   *   현재 미국 시간이 11~24시 사이라면 == 한국보다 하루 늦음
+  */
+  /*
+  한국시간으로 0시~13시까지는 미국은 -1, 한국 0
+
+  오리지널값에 today 또는 tomorrow가 들어있다면
+    섬머타임이 시행중이라면
+      한국시간이 0~13시 사이라면
+        13시간 덧셈
+        slot값 변경
+    아니라면
+      한국시간이 0~13시 사이라면
+        14시간 덧셈
+        slot값 변경
   */
 
 

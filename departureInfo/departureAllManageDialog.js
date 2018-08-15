@@ -75,10 +75,11 @@ module.exports = function(intentRequest, callback) {
   else { // Slot 데이터를 받아온게 있다면(대화 진행 중)
     console.log("사용자로부터 받은 데이터가 있어요!");
 
-    return validateDepFlightInfo(intentRequest.sessionAttributes, intentRequest.currentIntent.slotDetails, daDepartureDate, daDestination, daAirline).then(validationResult => {
+    return validateDepFlightInfo(intentRequest.sessionAttributes, intentRequest.currentIntent, daDepartureDate, daDestination, daAirline).then(validationResult => {
       //const validationResult = validateFlightInfo(intentRequest.sessionAttributes, daDepartureDate, daDestination, daAirline);
-      // 세션값 업데이트
+      // 세션값 및 slot값 업데이트
       intentRequest.sessionAttributes = validationResult.sessionAttributes;
+      intentRequest.currentIntent = validationResult.currentIntent;
 
       // 사용자로부터 받은 4가지 slot값들 중에 부적절한 값이 있다면
       if(!validationResult.isValid) {

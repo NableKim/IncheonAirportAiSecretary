@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * findingPlaceManageDialog.js - to validate inputs from user and call flight schedule from Open API
+ * findingAreaManageDialog.js - to validate inputs from user and call flight schedule from Open API
  *                            ultimately, get essential datas to search for only specific flight
  * Incheon Airport AI Secretary based on AWS Lex
  *
@@ -18,6 +18,11 @@ module.exports = function(intentRequest, callback) {
 
   console.log(faFindingArea);
 
+  const now = new Date(); // 현재 UTC 표준시를 가져옴
+  var koreaCurrentDate = date.addHours(now, 9); // +9시간을 해줘서 한국 시간으로 변경
+  console.log('한국의 현재 날짜와 시간'+date.format(koreaCurrentDate, 'YYYY/MM/DD HH:mm:ss'));
+  const todayString = date.format(koreaCurrentDate, 'YYYYMMDD');
+
   if(faFindingArea=='Check in counter' || faFindingArea == 'Boarding gate') {
     console.log('출발편 정보를 찾아야겠군');
 
@@ -32,11 +37,9 @@ module.exports = function(intentRequest, callback) {
       console.log('slots 값 출력 : '+ JSON.stringify(item));
 
       var dateString = item.sessionAttributes.departureDate;  // YYYYMMDD
-      const today = new Date();
-      console.log('현재 날짜와 시간'+date.format(today, 'YYYY/MM/DD HH:mm:ss'));
-      const todayString = date.format(today, 'YYYYMMDD');
 
       if(dateString == todayString) {
+        intentRequest.sessionAttributes = item.sessionAttributes;
         return lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots);
       } else {
         return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `You can get that data on only the departure date!`});
@@ -59,11 +62,9 @@ module.exports = function(intentRequest, callback) {
       console.log('slots 값 출력 : '+ JSON.stringify(item));
 
       var dateString = item.sessionAttributes.arrivalDate;  // YYYYMMDD
-      const today = new Date();
-      console.log('현재 날짜와 시간'+date.format(today, 'YYYY/MM/DD HH:mm:ss'));
-      const todayString = date.format(today, 'YYYYMMDD');
 
       if(dateString == todayString) {
+        intentRequest.sessionAttributes = item.sessionAttributes;
         return lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots);
       } else {
         return lexResponses.close(intentRequest.sessionAttributes, 'Failed', {contentType : 'PlainText', content: `You can get that data on only the arrival date!`});

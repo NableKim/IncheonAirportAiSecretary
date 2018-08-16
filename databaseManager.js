@@ -7,6 +7,7 @@ require('util.promisify').shim();
 //const promisify = require('es6-promisify');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const _ = require('lodash');
+var date = require('date-and-time');
 
 
 
@@ -40,7 +41,30 @@ module.exports.findUserLatestFlight = function(userId, str) {
           resolve(null);
         } else {
           console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-          resolve(data.Item);
+
+          // 저장되어 있는 운항편의 날짜가 이미 지난 운항편인지 확인
+          var date_str = ''; //YYYYMMDD
+          if(str=='departure') {
+            date_str = data.Item.departureDate;
+          } else if(str=='arrival'){
+            date_str = data.Item.arrivalDate;
+          }
+
+          // DB상에 저장된 날짜값
+          date_str = date_str.substring(0,4)+'-'+date_str.substring(4,6)+'-'+date_str.substring(6,8); // YYYY-MM-DD
+          var date_date = date.parse(date_str, 'YYYY-MM-DD');
+
+          // 한국의 현재 시간 구하기
+          const now = new Date();
+          var koreaCurrentDate = date.addHours(now, 9); // +9시간을 해줘서 한국 시간으로 변경
+          console.log('한국의 현재 시간'+date.format(koreaCurrentDate, 'YYYY/MM/DD HH:mm:ss'));
+
+          // date_date - now < 0 이면 과거 운항편이므로 데이터를 다시 받도록 함
+          if(date.subtract(date_date, now).toDays() < 0) {
+            resolve(null);
+          } else {
+            resolve(data.Item);
+          }
         }
       }
     });

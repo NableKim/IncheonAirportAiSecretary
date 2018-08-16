@@ -13,6 +13,7 @@ const arrivalAll = require('./arrivalInfo/arrivalAll');
 //const congestionDegree = require('./congestionDegree/congestionDegree');
 const findingArea = require('./findingAreaInfo/findingArea');
 const departureTime = require('./departureTimeInfo/departureTime');
+const arrivalTime = require('./arrivalTimeInfo/arrivalTime');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -28,11 +29,9 @@ module.exports = function(intentRequest) {
     // Implement this logic
     return arrivalAll(intentRequest);
   }
-  else if(intentName === 'ArrivalLocation') {
-    // Implement this logic
-  }
   else if(intentName === 'ArrivalTime') {
     // Implement this logic
+    return arrivalTime(intentRequest);
   }
   else if(intentName === 'CityWeather') {
     // Implement this logic
@@ -45,9 +44,6 @@ module.exports = function(intentRequest) {
   else if(intentName === 'DepartureAll') {
     // Implement this logic
     return departureAll(intentRequest);
-  }
-  else if(intentName === 'DepartureLocation') {
-    // Implement this logic
   }
   else if(intentName === 'DepartureTime') {
     // Implement this logic

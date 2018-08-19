@@ -134,7 +134,7 @@ module.exports = function(intentRequest, callback) {
                 }
               }
 
-              console.log('finalFlightSchedule 길이 : '+finalFlightSchedule.length);
+              console.log('finalFlightSchedule 길이 : '+ finalFlightSchedule.length);
               // 후보군 압축 과정 실행 결과
               if(finalFlightSchedule.length == 0) {
                 console.log(`조회결과 ${daDepartureDate} ${daDestination}행 ${airlineNameKR} 항공편은 없습니다`);

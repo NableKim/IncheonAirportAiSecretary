@@ -14,6 +14,7 @@ const congestionDegree = require('./congestionDegreeInfo/congestionDegree');
 const findingArea = require('./findingAreaInfo/findingArea');
 const departureTime = require('./departureTimeInfo/departureTime');
 const arrivalTime = require('./arrivalTimeInfo/arrivalTime');
+const airlineInfo = require('./airlineInfo/airlineInfo');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -24,6 +25,7 @@ module.exports = function(intentRequest) {
   // Run the appropriate logic depending on intentName value
   if(intentName === 'AirlineInfo') {
     // Implement this logic
+    return airlineInfo(intentRequest);
   }
   else if(intentName === 'ArrivalAll') {
     // Implement this logic

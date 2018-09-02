@@ -130,3 +130,43 @@ module.exports.getTodayFlightSchedule = function(sessionAttributes, str) {
     );
   });
 };
+
+module.exports.getAirlineInfo = function(lata_code) {
+  var url = 'http://openapi.airport.kr/openapi/service/StatusOfSrvAirlines/getServiceAirlineInfo';
+  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key; /* Service Key*/
+  queryParams += '&' + encodeURIComponent('airline_iata') + '=' + encodeURIComponent(lata_code); /* 항공사 IATA 코드 */
+  //queryParams += '&' + encodeURIComponent('airline_icao') + '=' + encodeURIComponent('　GIA'); /* 항공사 ICAO 코드 */
+
+  return new Promise(function(resolve, reject){
+    request({
+        url: url + queryParams,
+        method: 'GET'
+    }, function (error, response, body) {
+
+      if(error)
+        reject(error);
+        
+      // xml -> json 변환
+      var xml = body; // 실제 데이터
+      var formattedXml = format(xml);
+      var p = new x2j.Parser();
+      p.parseString(xml, function(err, result) {
+        if(err){
+          console.log(err);
+          reject(err);
+        }
+        else {
+          var s = JSON.stringify(result, undefined, 3);
+          //console.log("Result"+"\n", s, "\n");
+          console.log(result.response.body[0].items[0].item);
+          resolve(result.response.body[0].items[0].item);
+        }
+      });
+    });
+  });
+
+
+
+
+
+};

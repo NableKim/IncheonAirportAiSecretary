@@ -48,7 +48,7 @@ module.exports.close = function(sessionAttributes, fulfillmentState, message, re
       },
     };
   }
-  // null이 아니면
+  // null이면
   return {
     sessionAttributes,
     dialogAction: {

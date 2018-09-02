@@ -66,7 +66,7 @@ module.exports = function(sessionAttributes, currentIntent, departureDate, desti
     else {
       // 출발 일자를 다시 받도록 하자
       console.log('출발일자가 부적합하여 다시 받아야겠어요');
-      return Promise.resolve(buildValidationResult(false, 'daDepartureDate', sessionAttributes, currentIntent, null, 'it\'s invalid date. Please tell me date inside 7 days! If there is not your date below list, PLEASE WRITE THE DATE such as \"YYYY-MM-DD\"', validateResultOfDate.options));
+      return Promise.resolve(buildValidationResult(false, 'daDepartureDate', sessionAttributes, currentIntent, 'it\'s invalid date. Please tell me date inside 7 days! If there is not your date below list, PLEASE WRITE THE DATE such as \"YYYY-MM-DD\"', validateResultOfDate.options));
     }
   }
 

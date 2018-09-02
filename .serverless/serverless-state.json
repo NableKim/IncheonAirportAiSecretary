@@ -187,7 +187,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lex-incheon-airport-validation/dev/1534427697424-2018-08-16T13:54:57.424Z/lex-incheon-airport-validation.zip"
+                "S3Key": "serverless/lex-incheon-airport-validation/dev/1535091522122-2018-08-24T06:18:42.122Z/lex-incheon-airport-validation.zip"
               },
               "FunctionName": "lex-incheon-airport-validation-dev-intents",
               "Handler": "handler.intents",
@@ -206,14 +206,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "IntentsLambdaVersionIeGoKxI7TYTYEMeFTnrL3BxzJZy0BSVomRiP1F9WN0": {
+          "IntentsLambdaVersionSTwzSFLTT6ayGPuINpYdAFew1ezNZWTtrvy7txY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "IntentsLambdaFunction"
               },
-              "CodeSha256": "34Bmucq4RZaUWoQsUW0DL4fuKO4Vusp4iPPmN8LLCN0="
+              "CodeSha256": "wy/0SH1tlYi8B/aiDUd2dB76kP90JhVPn0teCXfcWeM="
             }
           },
           "MyFlightTable": {
@@ -270,7 +270,7 @@
           "IntentsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "IntentsLambdaVersionIeGoKxI7TYTYEMeFTnrL3BxzJZy0BSVomRiP1F9WN0"
+              "Ref": "IntentsLambdaVersionSTwzSFLTT6ayGPuINpYdAFew1ezNZWTtrvy7txY"
             }
           }
         }
@@ -358,7 +358,7 @@
     "artifact": "C:\\Users\\nable\\Documents\\IncheonAirportAiSecretary\\.serverless\\lex-incheon-airport-validation.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/lex-incheon-airport-validation/dev/1534427697424-2018-08-16T13:54:57.424Z",
+    "artifactDirectoryName": "serverless/lex-incheon-airport-validation/dev/1535091522122-2018-08-24T06:18:42.122Z",
     "artifact": "lex-incheon-airport-validation.zip"
   }
 }

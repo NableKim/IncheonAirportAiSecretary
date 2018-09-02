@@ -12,6 +12,7 @@ const lexResponses = require('../lexResponses');
 const getDataFromAPI = require('../getDataFromAPI');
 const validateDepFlightInfo = require('./validateDepFlightInfo');
 const findUserLatestFlight = require('../findUserLatestFlight');
+const saveMyFlight = require('./saveMyFlight');
 const _ = require('lodash');
 
 // =======================================================================================================================================
@@ -74,7 +75,6 @@ module.exports = function(intentRequest, callback) {
   }
   else { // Slot 데이터를 받아온게 있다면(대화 진행 중)
     console.log("사용자로부터 받은 데이터가 있어요!");
-
     return validateDepFlightInfo(intentRequest.sessionAttributes, intentRequest.currentIntent, daDepartureDate, daDestination, daAirline).then(validationResult => {
       //const validationResult = validateFlightInfo(intentRequest.sessionAttributes, daDepartureDate, daDestination, daAirline);
       // 세션값 및 slot값 업데이트
@@ -103,6 +103,7 @@ module.exports = function(intentRequest, callback) {
           // 출발일, 목적지, 항공사 슬롯값을 다 갖췄다면
           // 운항정보 API에 요청메세지를 보내 운항 일정을 불러온다
           return getDataFromAPI.getFlightSchedule(intentRequest.sessionAttributes.destinationCode, 'departure').then(flightSchedule_list => {
+
             console.log(`flightSchedule_list : ${flightSchedule_list}`);
 
             // 출발일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축
@@ -148,7 +149,13 @@ module.exports = function(intentRequest, callback) {
                 // 세션 및 슬롯에 항공편명 업데이트
                 intentRequest.sessionAttributes.flightId=finalFlightSchedule[0].flightId[0];
                 intentRequest.currentIntent.slots.daFlightId=finalFlightSchedule[0].flightId[0];
-                return lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots);
+                
+                return saveMyFlight(intentRequest, finalFlightSchedule[0]).then(fulFillmentResult => {
+                  // 세션정보 없애기
+                  console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
+                  intentRequest.sessionAttributes={};
+                  return lexResponses.close(intentRequest.sessionAttributes, fulFillmentResult.fulfillmentState, fulFillmentResult.message, null);
+                });
               }
               else {
                 console.log(`후보군 압축 결과 : ${finalFlightSchedule}`);

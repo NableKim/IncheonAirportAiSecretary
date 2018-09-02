@@ -30,6 +30,11 @@ module.exports.getFlightSchedule = function(airport_code, str) {
   queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent(airport_code); /* 공항 코드 */
 
 
+// ##################api 응답시간 측정 ##############
+  var now = new Date();
+  console.log('API 응답시간'+now);
+// ##################api 응답시간 측정 ##############
+
   return new Promise(function(resolve, reject){
     request(
       {
@@ -45,6 +50,10 @@ module.exports.getFlightSchedule = function(airport_code, str) {
         var formattedXml = format(xml);
         var p = new x2j.Parser();
         p.parseString(xml, function(err, result) {
+          // ##################api 응답시간 측정 ##############
+          now = new Date();
+          console.log('API 응답시간'+now);
+          // ##################api 응답시간 측정 ##############
           if(err){
             console.log(err);
             reject(err);
@@ -64,7 +73,6 @@ module.exports.getFlightSchedule = function(airport_code, str) {
 module.exports.getTodayFlightSchedule = function(sessionAttributes, str) {
   console.log(`api_config : ${api_config.flightSchedule_key}`);
 
-
   var url = '';
   var airportCode = null;
   if(str=='departure') {
@@ -83,6 +91,10 @@ module.exports.getTodayFlightSchedule = function(sessionAttributes, str) {
   queryParams += '&' + encodeURIComponent('lang') + '=' + encodeURIComponent('E'); /* 국문=K, 영문=E, 중문=C, 일문=J, Null=K */
   queryParams += '&' + encodeURIComponent('from_time') + '=' + encodeURIComponent('0000'); /* 검색 시작 시간 (HHMM) */
 
+  // ##################api 응답시간 측정 ##############
+    var now = new Date();
+    console.log('API 응답시간'+now);
+  // ##################api 응답시간 측정 ##############
 
   return new Promise(function(resolve, reject){
     request(
@@ -99,6 +111,10 @@ module.exports.getTodayFlightSchedule = function(sessionAttributes, str) {
         var formattedXml = format(xml);
         var p = new x2j.Parser();
         p.parseString(xml, function(err, result) {
+          // ##################api 응답시간 측정 ##############
+          now = new Date();
+          console.log('API 응답시간'+now);
+          // ##################api 응답시간 측정 ##############
           if(err){
             console.log(err);
             reject(err);

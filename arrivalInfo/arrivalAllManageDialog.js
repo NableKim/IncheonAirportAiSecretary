@@ -12,6 +12,7 @@ const lexResponses = require('../lexResponses');
 const getDataFromAPI = require('../getDataFromAPI');
 const validateArrFlightInfo = require('./validateArrFlightInfo');
 const findUserLatestFlight = require('../findUserLatestFlight');
+const saveMyFlight = require('./saveMyFlight');
 const _ = require('lodash');
 
 // =======================================================================================================================================
@@ -146,7 +147,13 @@ module.exports = function(intentRequest, callback) {
                 // 세션 및 슬롯에 항공편명 업데이트
                 intentRequest.sessionAttributes.flightId=finalFlightSchedule[0].flightId[0];
                 intentRequest.currentIntent.slots.aaFlightId=finalFlightSchedule[0].flightId[0];
-                return lexResponses.delegate(intentRequest.sessionAttributes, intentRequest.currentIntent.slots);
+              
+                return saveMyFlight(intentRequest, finalFlightSchedule[0]).then(fulFillmentResult => {
+                  // 세션정보 없애기
+                  console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));
+                  intentRequest.sessionAttributes={};
+                  return lexResponses.close(intentRequest.sessionAttributes, fulFillmentResult.fulfillmentState, fulFillmentResult.message, null);
+                });
               }
               else {
                 console.log(`후보군 압축 결과 : ${finalFlightSchedule}`);

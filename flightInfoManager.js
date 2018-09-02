@@ -4,8 +4,6 @@ const databaseManager = require('./databaseManager');
 const _ = require('lodash');
 var date = require('date-and-time');
 
-var date_list = []; // 일주일치 날짜 담을 배열
-
 function getButtons(options) {
   var buttons = [];
   _.forEach(options, option => {
@@ -43,6 +41,7 @@ Date.prototype.isDstObserved = function () {
 // 출발 일자 적합성 판단
 module.exports.validateFlightDate = function(currentIntent, date_str, depORarr) { // YYYY-MM-DD
 
+  var date_list = []; // 일주일치 날짜 담을 배열
   console.log('Let\'s Validate FlightDate... slotDetails값은 '+currentIntent.slotDetails+'이고 date는 '+date_str);
 
   // 한국의 현재 시간 구하기
@@ -75,13 +74,15 @@ module.exports.validateFlightDate = function(currentIntent, date_str, depORarr) 
   var input_date = date.parse(date_str, 'YYYY-MM-DD');
 
   // 조회일과 오늘 일수 차이 구하기 = input - today
-  var diff_days = date.subtract(input_date, now).toDays();  // 날짜 차이 계산
+  var diff_days = date.subtract(input_date, koreaCurrentDate).toDays();  // 날짜 차이 계산
+  console.log('날짜 차이 : '+diff_days);
 
   // input_date가 오늘을 기준으로 일주일 이내의 날짜가 아니라면
-  if(0 > diff_days || diff_days > 6) {
+  if(0 > diff_days || diff_days > 5) {
     // 오늘부터 일주일치 날짜 담아두기
+    console.log('date_list 날짜 : '+date_list);
     for(var i=0; i<5; i++)
-      date_list.push(date.format(date.addDays(now, i), 'YYYY-MM-DD'));
+      date_list.push(date.format(date.addDays(koreaCurrentDate, i), 'YYYY-MM-DD'));
 
     // 출발 일자 다시 받아!
     const options = getOptions('Select a date', date_list);

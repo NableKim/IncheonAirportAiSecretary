@@ -12,6 +12,8 @@ Date.prototype.isDstObserved = function () {
 }
 
 var today = new Date();
+console.log(today);
+
 if (today.isDstObserved()) {
   console.log('Daylight saving time!');
 } else {

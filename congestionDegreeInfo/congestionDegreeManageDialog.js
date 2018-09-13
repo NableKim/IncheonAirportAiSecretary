@@ -1,7 +1,7 @@
 'use strict';
 
 const lexResponses = require('../conLexResponses');
-const getCongestionDataFromAPI = require('../getCongestionDataFromAPI');
+const getCongestionDataFromAPI = require('./getCongestionDataFromAPI');
 // const _ = require('lodash');
 const terminalNumSample = ['Terminal 1', 'Terminal 2', 'terminal 1', 'terminal 2'];
 //순서대로 0, 1, 2, 3, 9

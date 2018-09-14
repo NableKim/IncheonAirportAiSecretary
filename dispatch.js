@@ -10,11 +10,15 @@
 
 const departureAll = require('./departureInfo/departureAll');
 const arrivalAll = require('./arrivalInfo/arrivalAll');
-const congestionDegree = require('./congestionDegreeInfo/congestionDegree');
+//const congestionDegree = require('./congestionDegreeInfo/congestionDegree');
 const findingArea = require('./findingAreaInfo/findingArea');
 const departureTime = require('./departureTimeInfo/departureTime');
 const arrivalTime = require('./arrivalTimeInfo/arrivalTime');
 const airlineInfo = require('./airlineInfo/airlineInfo');
+//const cityWeather = require('./cityWeatherInfo/cityWeather');
+//const exchangeRate = require('./exchangeRateInfo/exchangeRate');
+//const facilityInfo = require('./facilityInfo/facilityInfo');
+//const parkingInfo = require('./parkingInfo/parkingInfo');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -37,11 +41,11 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'CityWeather') {
     // Implement this logic
+    //return cityWeather(intentRequest);
   }
   else if(intentName === 'CongestionDegree') {
     // Implement this logic
-    console.log(intentName + ' was called');
-    return congestionDegree(intentRequest);
+    //return congestionDegree(intentRequest);
   }
   else if(intentName === 'DepartureAll') {
     // Implement this logic
@@ -53,12 +57,15 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'ExchangeRate') {
     // Implement this logic
+    //return exchangeRate(intentRequest);
   }
   else if(intentName === 'FacilityInfo') {
     // Implement this logic
+    //return facilityInfo(intentRequest);
   }
   else if(intentName === 'ParkingInfo') {
     // Implement this logic
+    //return parkingInfo(intentRequest);
   }
   else if(intentName === 'FindingArea') {
     return findingArea(intentRequest);

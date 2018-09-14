@@ -10,7 +10,7 @@
 
 const handleDialogCodeHook = require('./airlineInfoDialog');
 
-module.exports = function(intentRequest, callback) {
+module.exports = function(intentRequest) {
   console.log("Entered airlineInfo...");
   const source = intentRequest.invocationSource;
 

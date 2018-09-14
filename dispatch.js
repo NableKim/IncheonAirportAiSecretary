@@ -15,10 +15,7 @@ const findingArea = require('./findingAreaInfo/findingArea');
 const departureTime = require('./departureTimeInfo/departureTime');
 const arrivalTime = require('./arrivalTimeInfo/arrivalTime');
 const airlineInfo = require('./airlineInfo/airlineInfo');
-//const cityWeather = require('./cityWeatherInfo/cityWeather');
-//const exchangeRate = require('./exchangeRateInfo/exchangeRate');
-//const facilityInfo = require('./facilityInfo/facilityInfo');
-//const parkingInfo = require('./parkingInfo/parkingInfo');
+const exchangeRate = require('./exchangeRate/exchangeRate');
 
 module.exports = function(intentRequest) {
   console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
@@ -57,7 +54,8 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'ExchangeRate') {
     // Implement this logic
-    //return exchangeRate(intentRequest);
+    console.log(intentName + ' was called');
+    return exchangeRate(intentRequest);
   }
   else if(intentName === 'FacilityInfo') {
     // Implement this logic

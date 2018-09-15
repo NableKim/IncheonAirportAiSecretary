@@ -43,6 +43,12 @@ function getTodayDate() {
   var dd = today.getDate();
   var mm = today.getMonth()+1; //January is 0!
   var yyyy = today.getFullYear();
+  var day = today.getDay();
+  //0일요일 1월요일 2화요일....6토요일
+  if(day == 0 || day == 6) { //주말이면
+    if(day == 0)  dd-=2;
+    else if(day == 6) dd -=1;
+  }
   if(dd<10) {dd='0'+dd;}
   if(mm<10) {mm='0'+mm;}
   today = yyyy+mm+dd;

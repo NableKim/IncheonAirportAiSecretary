@@ -168,7 +168,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/lex-incheon-airport-validation/dev/1535911514685-2018-09-02T18:05:14.685Z/lex-incheon-airport-validation.zip"
+          "S3Key": "serverless/lex-incheon-airport-validation/dev/1536975942732-2018-09-15T01:45:42.732Z/lex-incheon-airport-validation.zip"
         },
         "FunctionName": "lex-incheon-airport-validation-dev-intents",
         "Handler": "handler.intents",
@@ -187,14 +187,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "IntentsLambdaVersionsUVJdcetavz2c0R79kJUXORKqXVkYwryWgqbfufnfJM": {
+    "IntentsLambdaVersionV65uZNeWeCkg12aJzK2sqFnQSJqwwv0HarBM3HI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "IntentsLambdaFunction"
         },
-        "CodeSha256": "vgeESakYvBNCsu+lSPFqrOBRdAHwb0D7I4J5KRhdLOM="
+        "CodeSha256": "YgYmC853Wlfx9vZ+RHU+DjHa5xCsZH+XXS9dVO4fUxI="
       }
     },
     "MyFlightTable": {
@@ -251,7 +251,7 @@
     "IntentsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "IntentsLambdaVersionsUVJdcetavz2c0R79kJUXORKqXVkYwryWgqbfufnfJM"
+        "Ref": "IntentsLambdaVersionV65uZNeWeCkg12aJzK2sqFnQSJqwwv0HarBM3HI"
       }
     }
   }

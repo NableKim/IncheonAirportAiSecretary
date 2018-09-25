@@ -5,7 +5,10 @@ const getExchangeRateDataFromAPI = require('./getExchangeRateDataFromAPI');
 
 const currencySample = ['AED', 'AUD', 'BHD', 'CHF', 'CNH', 'DKK', 'EUR',
                         'GBP', 'HKD', 'IDR', 'JPY', 'KRW', 'KWD', 'MYR',
-                        'NOK', 'NZD', 'SAR', 'SEK', 'SGD', 'THB', 'USD'];
+                        'NOK', 'NZD', 'SAR', 'SEK', 'SGD', 'THB', 'USD',
+                        'aed', 'aud', 'bhd', 'chf', 'cnh', 'dkk', 'eur',
+                        'gbp', 'hkd', 'idr', 'jpy', 'krw', 'kwd', 'myr',
+                        'nok', 'nzd', 'sar', 'sek', 'sgd', 'thb', 'usd'];
 
 function buildValidationResult(isValid, violatedSlot, messageContent) {
   if (messageContent == null) {
@@ -43,6 +46,12 @@ function getTodayDate() {
   var dd = today.getDate();
   var mm = today.getMonth()+1; //January is 0!
   var yyyy = today.getFullYear();
+  var day = today.getDay();
+  //0일요일 1월요일 2화요일....6토요일
+  if(day == 0 || day == 6) { //주말이면
+    if(day == 0)  dd-=2;
+    else if(day == 6) dd -=1;
+  }
   if(dd<10) {dd='0'+dd;}
   if(mm<10) {mm='0'+mm;}
   today = yyyy+mm+dd;
@@ -75,15 +84,22 @@ module.exports = function(intentRequest, callback) {
       } else {
         console.log('환율 정보가 존재합니다');
         console.log(exchangeRate_list.length);
-        currency = currency.toUpperCase();
+        // currency = currency.toUpperCase();
         var i = 0;
         for(i = 0; i < exchangeRate_list.length; i++) {
           console.log("result!!!!!! " + exchangeRate_list[i].cur_unit);
           if(exchangeRate_list[i].cur_unit == currency) {
             currency_rate = exchangeRate_list[i].deal_bas_r;
+          } else if(currency == exchangeRate_list[i].cur_unit.substring(0,3)) {
+            currency_rate = exchangeRate_list[i].deal_bas_r;
           }
         }
-        message = "1 " + currency + " is " + currency_rate + " KRW";
+        if(currency == 'JPY' || currency == 'jpy' || currency =='IDR' || currency =='idr') {
+          message = "100 " + currency + " is " + currency_rate + " KRW";
+        } else {
+          message = "1 " + currency + " is " + currency_rate + " KRW";
+        }
+
       }
       return lexResponses.close(intentRequest.sessionAttributes, 'Fulfilled',
       {'contentType' : 'PlainText', 'content': `${message}`},

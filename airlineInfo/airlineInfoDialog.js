@@ -1,8 +1,8 @@
 'use strict';
 
 /*
- * airlineInfoManageDialog.js - to validate inputs from user and call flight schedule from Open API
- *                            ultimately, get essential datas to search for only specific flight
+ * airlineInfoManageDialog.js - to validate inputs from user and call airline info from Open API
+ *
  * Incheon Airport AI Secretary based on AWS Lex
  *
  * Created by Nablekim94@gmail.com 2018-08-13

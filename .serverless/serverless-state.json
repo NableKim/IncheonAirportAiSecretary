@@ -187,7 +187,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lex-incheon-airport-validation/dev/1537002192633-2018-09-15T09:03:12.633Z/lex-incheon-airport-validation.zip"
+                "S3Key": "serverless/lex-incheon-airport-validation/dev/1537861881633-2018-09-25T07:51:21.633Z/lex-incheon-airport-validation.zip"
               },
               "FunctionName": "lex-incheon-airport-validation-dev-intents",
               "Handler": "handler.intents",
@@ -206,14 +206,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "IntentsLambdaVersiond5yUTFC4IUFWtq0yCBVC18LLFP76F2VYom13AAXtjA": {
+          "IntentsLambdaVersionQmuFPztpTELFbhqX3NQJESsul3AM0z1lHVFry7B3Kg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "IntentsLambdaFunction"
               },
-              "CodeSha256": "41A3JUlC9LgSRLMPsLqRXvUcDrz4vX/nkWxFoQElH2A="
+              "CodeSha256": "rkIYpb0XVRjW8p5ahZD3tdv2yV5iGpqaRST5x/E4gO0="
             }
           },
           "MyFlightTable": {
@@ -270,7 +270,7 @@
           "IntentsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "IntentsLambdaVersiond5yUTFC4IUFWtq0yCBVC18LLFP76F2VYom13AAXtjA"
+              "Ref": "IntentsLambdaVersionQmuFPztpTELFbhqX3NQJESsul3AM0z1lHVFry7B3Kg"
             }
           }
         }
@@ -355,10 +355,10 @@
       },
       "Outputs": {}
     },
-    "artifact": "C:\\Users\\LeeDaYeon\\Desktop\\aws\\IncheonAirportAiSecretary\\.serverless\\lex-incheon-airport-validation.zip"
+    "artifact": "C:\\Users\\nable\\Documents\\IncheonAirportAiSecretary\\.serverless\\lex-incheon-airport-validation.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/lex-incheon-airport-validation/dev/1537002192633-2018-09-15T09:03:12.633Z",
+    "artifactDirectoryName": "serverless/lex-incheon-airport-validation/dev/1537861881633-2018-09-25T07:51:21.633Z",
     "artifact": "lex-incheon-airport-validation.zip"
   }
 }

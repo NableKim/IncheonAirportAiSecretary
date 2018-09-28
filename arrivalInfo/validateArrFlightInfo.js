@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+ * validateArrFlightInfo.js - to make validation result after flightInfoManager call
+ *
+ * Incheon Airport AI Secretary based on AWS Lex
+ *
+ * Created by Nablekim94@gmail.com
+ */
+
 const flightInfoManager = require('../flightInfoManager');
 const _ = require('lodash');
 
@@ -64,7 +72,7 @@ module.exports = function(sessionAttributes, currentIntent, arrivalDate, source,
     }
     // 이 결과가 거짓
     else {
-      // 출발 일자를 다시 받도록 하자
+      // 도착 일자를 다시 받도록 하자
       console.log('출발일자가 부적합하여 다시 받아야겠어요');
       return Promise.resolve(buildValidationResult(false, 'aaArrivalDate', sessionAttributes, currentIntent, 'it\'s invalid date. Please tell me date inside 7 days! If there is not your date below list, PLEASE WRITE THE DATE such as \"YYYY-MM-DD\"', validateResultOfDate.options));
     }
@@ -97,7 +105,7 @@ module.exports = function(sessionAttributes, currentIntent, arrivalDate, source,
         return buildValidationResult(true, null, sessionAttributes, currentIntent, null, null);
       }
       else {  // 결과값이 없다면
-        // 도착지를 다시 받도록 하자
+        // 항공사이름을 다시 받도록 하자
         console.log('항공사 이름이 부적합하여 다시 받아야겠어요');
         return buildValidationResult(false, 'daAirline', sessionAttributes, currentIntent, `${airline} is not exact airline name. Please say correct name`);
       }

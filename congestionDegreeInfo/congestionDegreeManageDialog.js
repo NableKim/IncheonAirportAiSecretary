@@ -1,7 +1,7 @@
 'use strict';
 
-const lexResponses = require('../conLexResponses');
-const getCongestionDataFromAPI = require('./getCongestionDataFromAPI');
+const lexResponses = require('../lexResponses');
+const getDataFromAPI = require('../getDataFromAPI');
 // const _ = require('lodash');
 const terminalNumSample = ['Terminal 1', 'Terminal 2', 'terminal 1', 'terminal 2'];
 //순서대로 0, 1, 2, 3, 9
@@ -222,7 +222,7 @@ module.exports = function(intentRequest, callback) {
     var i = convertTerminalNumberToNumber(TerminalNum);
     integerTerminalNum = i;
     //api 요청
-    return getCongestionDataFromAPI.getCongestionDegree(i).then(congestionDegree_list => {
+    return getDataFromAPI.getCongestionDegree(i).then(congestionDegree_list => {
       console.log(`congestionDegree_list : ${congestionDegree_list}`);
 
       if(congestionDegree_list.length == 0) {

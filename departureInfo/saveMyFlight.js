@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+ * saveMyFlight.js - To save search result to DB and make a response message for user
+ *
+ * Incheon Airport AI Secretary based on AWS Lex
+ *
+ * Created by Nablekim94@gmail.com 2018-08-15
+*/
+
 const databaseManager = require('../databaseManager');
 const _ = require('lodash');
 

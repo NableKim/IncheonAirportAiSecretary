@@ -120,7 +120,7 @@ module.exports = function(intentRequest, callback) {
               const arrivalDate = intentRequest.sessionAttributes.arrivalDate;
               const airlineNameKR = intentRequest.sessionAttributes.airlineNameKR;
 
-              // 출발일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축해서 저장할 리스트
+              // 도착일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축해서 저장할 리스트
               var finalFlightSchedule = [];
 
               // 데이터 비교
@@ -147,7 +147,7 @@ module.exports = function(intentRequest, callback) {
                 // 세션 및 슬롯에 항공편명 업데이트
                 intentRequest.sessionAttributes.flightId=finalFlightSchedule[0].flightId[0];
                 intentRequest.currentIntent.slots.aaFlightId=finalFlightSchedule[0].flightId[0];
-              
+
                 return saveMyFlight(intentRequest, finalFlightSchedule[0]).then(fulFillmentResult => {
                   // 세션정보 없애기
                   console.log('세션 삭제 전 intentRequest 출력'+JSON.stringify(intentRequest));

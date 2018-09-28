@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * departureTimeManageDialog.js - to validate inputs from user and call flight schedule from Open API
+ * departureTimeManageDialog.js - to validate inputs from user and call estimated flight time from Open API
  *                            ultimately, get essential datas to search for only specific flight
  * Incheon Airport AI Secretary based on AWS Lex
  *

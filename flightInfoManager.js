@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+ * flightInfoManager.js - to validate slot-inputs from user (flight date, place, airline)
+ *
+ * Incheon Airport AI Secretary based on AWS Lex
+ *
+ * Created by Nablekim94@gmail.com 2018-08-13
+ */
+
 const databaseManager = require('./databaseManager');
 const _ = require('lodash');
 var date = require('date-and-time');
@@ -22,21 +30,6 @@ function getOptions(title, date_list) {
     buttons : getButtons(date_list)
   };
 }
-
-/*
-Date.prototype.stdTimezoneOffset = function () {
-    var jan = new Date(this.getFullYear(), 0, 1); // 미국 로스엔젤레스의 1월 1일 시간  - 서머타임 X - (-8시간 차이) - (+480)
-    console.log('jan : '+jan+' '+jan.getTimezoneOffset());
-    var jul = new Date(this.getFullYear(), 6, 1);  // 미국 로스엔젤레스의 7월 1일 시간 - 서머타임 o - (-7시간 차이) - (+420)
-    console.log('jul : '+jul.getTimezoneOffset());
-    return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
-}
-
-Date.prototype.isDstObserved = function () {
-  console.log('getTime : '+this.getTimezoneOffset());
-    return this.getTimezoneOffset() < this.stdTimezoneOffset();
-}
-*/
 
 // 출발 일자 적합성 판단
 module.exports.validateFlightDate = function(currentIntent, date_str, depORarr) { // YYYY-MM-DD

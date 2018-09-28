@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+ * findUserLatestFlight.js - To confirm whether user searched for his flight schedule few days age
+ *
+ * Incheon Airport AI Secretary based on AWS Lex
+ *
+ * Created by Nablekim94@gmail.com 2018-07-15
+*/
+
 const databaseManager = require('./databaseManager');
 
 // Myflght DB에서 가져온 정보와 메세지 정보를 객체로 만들어서 리턴

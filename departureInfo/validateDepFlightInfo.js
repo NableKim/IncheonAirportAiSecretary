@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+ * validateDepFlightInfo.js - to make validation result after flightInfoManager call
+ *
+ * Incheon Airport AI Secretary based on AWS Lex
+ *
+ * Created by Nablekim94@gmail.com
+ */
+
 const flightInfoManager = require('../flightInfoManager');
 const _ = require('lodash');
 

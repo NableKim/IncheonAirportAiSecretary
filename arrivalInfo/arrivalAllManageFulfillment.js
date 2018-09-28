@@ -27,8 +27,8 @@ module.exports = function(intentRequest, callback) {
   return getDataFromAPI.getFlightSchedule(sourceCode, 'arrival').then(flightSchedule_list => {
     console.log(`flightSchedule_list : ${flightSchedule_list}`);
 
-    // 입력받은 목적지, 항공사, 출발일자, 항공편명을 가지고 원하는 항공편만 골라내기
-    // 출발일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축
+    // 입력받은 출발지, 항공사, 도착일자, 항공편명을 가지고 원하는 항공편만 골라내기
+    // 도착일자, 항공사 값을 대조하여 사용자가 탈 비행기 후보군을 압축
     var finalFlightSchedule = [];
     if(flightSchedule_list.length == 0) {
       console.log(`조회결과 앞으로 일주일간 ${aaSource}으로부터 오는 항공편은 없습니다`);
@@ -43,7 +43,7 @@ module.exports = function(intentRequest, callback) {
       const airlineNameKR = intentRequest.sessionAttributes.airlineNameKR;
       const flightId = intentRequest.sessionAttributes.flightId;
 
-      // 출발일자, 항공사 , 항공편명 값을 대조하여 사용자가 탈 비행기 후보군을 압축해서 저장할 리스트
+      // 도착일자, 항공사, 항공편명 값을 대조하여 사용자가 탈 비행기 후보군을 압축해서 저장할 리스트
       var finalFlightSchedule = [];
 
       // 데이터 비교

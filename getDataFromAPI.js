@@ -26,7 +26,7 @@ module.exports.getFlightSchedule = function(airport_code, str) {
     url = 'http://openapi.airport.kr/openapi/service/StatusOfPassengerFlightsDS/getPassengerArrivalsDS';
   }
 
-  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + 'sIHubBZe%2FsPM76R2dlHOOuve9RZrmuzKynUIxWar%2BtvOb209aOTFQikgz0vxGLRBFoSckQ3dZdbrdYLMozHCDg%3D%3D';
+  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key;
   queryParams += '&' + encodeURIComponent('airport_code') + '=' + encodeURIComponent(airport_code); /* 공항 코드 */
 
 
@@ -145,7 +145,7 @@ module.exports.getAirlineInfo = function(lata_code) {
 
       if(error)
         reject(error);
-        
+
       // xml -> json 변환
       var xml = body; // 실제 데이터
       var formattedXml = format(xml);
@@ -164,9 +164,42 @@ module.exports.getAirlineInfo = function(lata_code) {
       });
     });
   });
+};
+
+module.exports.getCongestionDegree = function(terminalNum) {
+  console.log(`api_config : ${api_config.flightSchedule_key}`);
+  var url = 'http://openapi.airport.kr/openapi/service/StatusOfDepartures/getDeparturesCongestion';
+  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + api_config.flightSchedule_key;
+  //terminalNum = 1 or 2
+  queryParams += '&' + encodeURIComponent('terno') + '=' + encodeURIComponent(terminalNum);
 
 
+  return new Promise(function(resolve, reject){
+    request(
+      {
+        url: url + queryParams,
+        method: 'GET'
+      },
+      function(error, response, body) {
+        //console.log('Status', response.statusCode);
+        // console.log('Headers', JSON.stringify(response.headers));
 
-
-
+        // xml -> json 변환
+        var xml = body; // 실제 데이터
+        var formattedXml = format(xml);
+        var p = new x2j.Parser();
+        p.parseString(xml, function(err, result) {
+          if(err){
+            console.log(err);
+            reject(err);
+          }
+          else {
+            var s = JSON.stringify(result, undefined, 3);
+            console.log("API file..... " + result.response.body[0].items[0].item);
+            resolve(result.response.body[0].items[0].item);
+          }
+        });
+      }
+    );
+  });
 };

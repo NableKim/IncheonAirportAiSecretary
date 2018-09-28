@@ -10,7 +10,7 @@
 
 const departureAll = require('./departureInfo/departureAll');
 const arrivalAll = require('./arrivalInfo/arrivalAll');
-//const congestionDegree = require('./congestionDegreeInfo/congestionDegree');
+const congestionDegree = require('./congestionDegreeInfo/congestionDegree');
 const findingArea = require('./findingAreaInfo/findingArea');
 const departureTime = require('./departureTimeInfo/departureTime');
 const arrivalTime = require('./arrivalTimeInfo/arrivalTime');
@@ -42,7 +42,7 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'CongestionDegree') {
     // Implement this logic
-    //return congestionDegree(intentRequest);
+    return congestionDegree(intentRequest);
   }
   else if(intentName === 'DepartureAll') {
     // Implement this logic
@@ -54,7 +54,6 @@ module.exports = function(intentRequest) {
   }
   else if(intentName === 'ExchangeRate') {
     // Implement this logic
-    console.log(intentName + ' was called');
     return exchangeRate(intentRequest);
   }
   else if(intentName === 'FacilityInfo') {

@@ -10,7 +10,7 @@ var api_config = require('../config/openAPIKey.json');
 
 /*
 https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?
-authkey=xujmgfrokl81sWL6XMKV4oCuWyF5oBsR& (키)
+authkey=비공개 (키)
 searchdate=20180102& 날짜(안나오면 더 이전으로)
 data=AP01 고정
 */
@@ -19,7 +19,7 @@ data=AP01 고정
 module.exports.getExchangeRate = function(date) {
   // console.log(`api_config : ${api_config.flightSchedule_key}`);
   var url = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON';
-  var queryParams = '?' + encodeURIComponent('authkey') + '=' + 'xujmgfrokl81sWL6XMKV4oCuWyF5oBsR';
+  var queryParams = '?' + encodeURIComponent('authkey') + '=' + api_config.exchangeRate_key;
   //terminalNum = 1 or 2
   queryParams += '&' + encodeURIComponent('searchdate') + '=' + date;
   queryParams += '&' + encodeURIComponent('data') + '=' + 'AP01';

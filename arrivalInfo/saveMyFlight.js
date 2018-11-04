@@ -38,31 +38,31 @@ module.exports = function(intentRequest, flightInfo) {
 
     const terminalid = terminal[flightInfo.terminalid[0]];
 
-    var fulfillMessage = `
-      Date : ${flightInfo.estimatedDateTime[0].substring(0,8)}\n
-      Source : ${intentRequest.currentIntent.slots.aaSource}(${flightInfo.airportcode[0]})\n
-      Airline : ${intentRequest.currentIntent.slots.aaAirline}\n
-      Flight Number : ${flightInfo.flightId[0]}\n
-      Estimated Time : ${flightInfo.estimatedDateTime[0].substring(8,10)}:${flightInfo.estimatedDateTime[0].substring(10,12)}\n
-      Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}\n
-      Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}\n
-      Terminal : ${terminalid}`;
+    var fulfillMessage = `Your flight schedule is as follow.\n
+    Date : ${flightInfo.estimatedDateTime[0].substring(0,8)}
+    Source : ${intentRequest.currentIntent.slots.aaSource}(${flightInfo.airportcode[0]})
+    Airline : ${intentRequest.currentIntent.slots.aaAirline}
+    Flight Number : ${flightInfo.flightId[0]}
+    Estimated Time : ${flightInfo.estimatedDateTime[0].substring(8,10)}:${flightInfo.estimatedDateTime[0].substring(10,12)}
+    Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}
+    Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}
+    Terminal : ${terminalid}`;
 
     // 비행편이 오늘날짜라면 응답메세지에 비행기 운항상태, 게이트 번호, 수화물 수취대, 출구번호가 추가로 올것이다. 이것을 추가해주자
     if(!_.isEmpty(flightInfo.gatenumber)) {
-      fulfillMessage += `\n Gate : ${flightInfo.gatenumber[0]}`;
+      fulfillMessage += `\nGate : ${flightInfo.gatenumber[0]}`;
     }
 
     if(!_.isEmpty(flightInfo.remark)) {
-      fulfillMessage +=`\n Status : ${status[flightInfo.remark[0]]}`;
+      fulfillMessage +=`\nStatus : ${status[flightInfo.remark[0]]}`;
     }
 
     if(!_.isEmpty(flightInfo.carousel)) {
-      fulfillMessage += `\n Carousel : ${flightInfo.carousel[0]}`;
+      fulfillMessage += `\nCarousel : ${flightInfo.carousel[0]}`;
     }
 
     if(!_.isEmpty(flightInfo.exitnumber)) {
-      fulfillMessage += `\n Exit : ${flightInfo.exitnumber[0]}`;
+      fulfillMessage += `\nExit : ${flightInfo.exitnumber[0]}`;
     }
 
     return buildFulfillmentResult('Fulfilled', fulfillMessage);

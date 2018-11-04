@@ -54,7 +54,7 @@ function translateResultForTer1(TerminalNum, gate1, gate2, gate3, gate4, gateinf
   //gate4/gateinfo4: 5번출국장 혼잡도/대기인수
     var finalMessage = "";
     console.log("터미널1");
-    finalMessage += "This is congestion degree of Terminal 1" + "\n";
+    finalMessage += "This is congestion degree of Terminal 1" + "\n\n";
     //gate1
     switch (gate1) {
       case '0':
@@ -152,7 +152,7 @@ function translateResultForTer1(TerminalNum, gate1, gate2, gate3, gate4, gateinf
 function translateResultForTer2(TerminalNum, gate1, gate2,gateinfo1, gateinfo2) {
   var finalMessage = "";
   console.log("터미널2");
-  finalMessage += "This is congestion degree of Terminal 2"+ "\n";
+  finalMessage += "This is congestion degree of Terminal 2"+ "\n\n";
   //T2
   //gate1/gateinfo1: 1번출국장 혼잡도/대기인수
   //gate2/gateinfo2: 2번출국장 혼잡도/대기인수

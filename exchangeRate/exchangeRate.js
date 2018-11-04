@@ -8,11 +8,11 @@ module.exports = function(intentRequest, callback) {
   const source = intentRequest.invocationSource;
 
   if(source === 'DialogCodeHook') {
-    console.log("Running congestionDegree's DialogCodeHook...");
+    console.log("Running exchangeRateManage's DialogCodeHook...");
     return handleDialogCodeHook(intentRequest);
   }
   else if(source === 'FulfillmentCodeHook') {
-    console.log("Running congestionDegree's FulfillmentCodeHook...");
+    console.log("Running exchangeRateManage's FulfillmentCodeHook...");
     return handleFulfillmentCodeHook(intentRequest);
   }
 };

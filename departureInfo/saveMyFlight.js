@@ -52,16 +52,16 @@ module.exports = function(intentRequest, flightInfo) {
 
     const terminalid = terminal[flightInfo.terminalid[0]];
 
-    var fulfillMessage = `
-      Date : ${flightInfo.estimatedDateTime[0].substring(0,8)}\n
-      Destination : ${intentRequest.currentIntent.slots.daDestination}(${flightInfo.airportcode[0]})\n
-      Airline : ${intentRequest.currentIntent.slots.daAirline}\n
-      Flight Number : ${flightInfo.flightId[0]}\n
-      Estimated Time : ${flightInfo.estimatedDateTime[0].substring(8,10)}:${flightInfo.estimatedDateTime[0].substring(10,12)}\n
-      Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}\n
-      Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}\n
-      Check in : ${flightInfo.chkinrange[0]}\n
-      Terminal : ${terminalid}`;
+    var fulfillMessage = `Your flight schedule is as follow.\n
+    Date : ${flightInfo.estimatedDateTime[0].substring(0,8)}
+    Destination : ${intentRequest.currentIntent.slots.daDestination}(${flightInfo.airportcode[0]})
+    Airline : ${intentRequest.currentIntent.slots.daAirline}
+    Flight Number : ${flightInfo.flightId[0]}
+    Estimated Time : ${flightInfo.estimatedDateTime[0].substring(8,10)}:${flightInfo.estimatedDateTime[0].substring(10,12)}
+    Scheduled Date(old) : ${flightInfo.scheduleDateTime[0].substring(0,8)}
+    Scheduled Time(old) : ${flightInfo.scheduleDateTime[0].substring(8,10)}:${flightInfo.scheduleDateTime[0].substring(10,12)}
+    Check in : ${flightInfo.chkinrange[0]}
+    Terminal : ${terminalid}`;
 
     // 비행편이 오늘날짜라면 응답메세지에 비행기 운항상태 및 게이트 번호가 추가로 올것이다. 이것을 추가해주자
     if(!_.isEmpty(flightInfo.gatenumber)) {
@@ -69,7 +69,7 @@ module.exports = function(intentRequest, flightInfo) {
     }
 
     if(!_.isEmpty(flightInfo.remark)) {
-      fulfillMessage +=`\n Status : ${status[flightInfo.remark[0]]}`;
+      fulfillMessage +=`\nStatus : ${status[flightInfo.remark[0]]}`;
     }
 
     return buildFulfillmentResult('Fulfilled', fulfillMessage);

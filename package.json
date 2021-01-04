@@ -18,7 +18,7 @@
   "homepage": "https://github.com/NableKim/IncheonAirportAiSecretary#readme",
   "dependencies": {
     "aws-sdk": "^2.282.1",
-    "date-and-time": "^0.6.2",
+    "date-and-time": "^0.14.2",
     "es6-promisify": "^6.0.0",
     "lodash": "^4.17.13",
     "npm": "^6.2.0",

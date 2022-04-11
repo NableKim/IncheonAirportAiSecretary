@@ -25,7 +25,7 @@
 
 
 ## Collaborators
-* [NableKim](https://www.github.com/NableKim) - **SeungSoo Kim** \<nablekim94@gmail.com\> 역할 기입
-* [DianaLeee](https://www.github.com/DianaLeee) - **Dayeon Lee** \<이메일\> 역할 기입      
-* [rosylee](https://www.github.com/rosylee) - **Ahyun Lee** \<이메일\> 역할 기입
-* [Changhyeon Kim](https://www.github.com/Changhyeon Kim) - **Changhyeon Kim** \<이메일\> 역할 기입
+* [NableKim](https://www.github.com/NableKim) - **SeungSoo Kim** \<nablekim94@gmail.com\>
+* [DianaLeee](https://www.github.com/DianaLeee) - **Dayeon Lee**
+* [rosylee](https://www.github.com/rosylee) - **Ahyun Lee**
+* [Changhyeon Kim](https://www.github.com/Changhyeon Kim) - **Changhyeon Kim**
